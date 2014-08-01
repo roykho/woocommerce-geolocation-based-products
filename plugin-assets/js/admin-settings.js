@@ -41,20 +41,41 @@ jQuery( document ).ready( function( $ ) {
 		reInitRows: function() {
 			// re-init row positions
 			$( 'table.wc-geolocation-based-products-settings' ).find( 'tr.entry' ).each( function( row ) {
+				// reinit row position country 
 				var rowPos = String( $( 'input.wc-geolocation-based-products-country', this ).prop( 'name' ) ),
 					replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
 				$( 'input.wc-geolocation-based-products-country', this ).prop( 'name', replacedName );
 
+				// reinit row position region
+				rowPos = String( $( 'input.wc-geolocation-based-products-region', this ).prop( 'name' ) );
+				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
+
+				$( 'input.wc-geolocation-based-products-region', this ).prop( 'name', replacedName );
+
+				// reinit row position city
+				rowPos = String( $( 'input.wc-geolocation-based-products-city', this ).prop( 'name' ) );
+				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
+
+				$( 'input.wc-geolocation-based-products-city', this ).prop( 'name', replacedName );
+
+				// reinit row position products
 				rowPos = String( $( 'select.wc-geolocation-based-products-choose-products', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
 				$( 'select.wc-geolocation-based-products-choose-products', this ).prop( 'name', replacedName );
 
+				// reinit row position product categories
 				rowPos = String( $( 'select.wc-geolocation-based-products-choose-product-categories', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
 				$( 'select.wc-geolocation-based-products-choose-product-categories', this ).prop( 'name', replacedName );
+
+				// reinit row position test
+				rowPos = String( $( 'input.wc-geolocation-based-products-test', this ).prop( 'name' ) );
+				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
+
+				$( 'input.wc-geolocation-based-products-test', this ).prop( 'name', replacedName );
 			});
 		},
 
@@ -76,9 +97,16 @@ jQuery( document ).ready( function( $ ) {
 
 				// remove any checkmark
 				clonedRow.find( '.wc-geolocation-based-products-remove-row' ).prop( 'checked', false );
+				clonedRow.find( '.wc-geolocation-based-products-test' ).prop( 'checked', false );
 
 				// remove country field value
 				clonedRow.find( '.wc-geolocation-based-products-country' ).val( '' );
+
+				// remove region field value
+				clonedRow.find( '.wc-geolocation-based-products-region' ).val( '' );
+
+				// remove city field value
+				clonedRow.find( '.wc-geolocation-based-products-city' ).val( '' );
 
 				// append row to table
 				table.find( 'tbody' ).append( clonedRow );
@@ -106,9 +134,16 @@ jQuery( document ).ready( function( $ ) {
 					if ( table.find( 'tr.entry' ).length === 1 ) {
 						// remove checkmark
 						table.find( '.wc-geolocation-based-products-remove-row' ).prop( 'checked', false );
+						table.find( '.wc-geolocation-based-products-test' ).prop( 'checked', false );
 
 						// remove country field value
 						table.find( '.wc-geolocation-based-products-country' ).val( '' );
+
+						// remove region field value
+						table.find( '.wc-geolocation-based-products-region' ).val( '' );
+
+						// remove city field value
+						table.find( '.wc-geolocation-based-products-city' ).val( '' );
 
 						// reset select options
 						table.find( 'select.wc-geolocation-based-products-choose-products' ).val( '' ).trigger( 'chosen:updated' );
@@ -122,6 +157,14 @@ jQuery( document ).ready( function( $ ) {
 
 				// re-init row positions
 				$.wc_geolocation_based_products_admin.reInitRows();
+			});
+
+			// test checkbox toggles
+			$( 'table.wc-geolocation-based-products-settings' ).on( 'click', '.wc-geolocation-based-products-test', function() {
+				// remove checkmark from all
+				$( this ).parents( 'table.wc-geolocation-based-products-settings' ).find( '.wc-geolocation-based-products-test' ).not( this ).prop( 'checked', false );
+
+				return true;
 			});
 		}
 	}; // close namespace

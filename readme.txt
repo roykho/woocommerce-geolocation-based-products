@@ -4,7 +4,7 @@ Tags: woocommerce, products, conditional products, location, geolocation, splash
 WordPress requires at least: 3.9.1
 Tested up to: 3.9.1
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,7 +25,11 @@ A WooCommerce plugin/extension that adds ability for your store to show/hide pro
 
 You can add many different countries in which you want the settings to apply to.  You do this by adding a row and setting the 2 letter country code in which you want to apply to.  For example "US".  Then you set whether you want to hide certain product categories or just products themselves.  You may select more than one for each.
 
-You can also use the country test simulator to test out your settings as if you're visiting the site from another country.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to remove this country code when done testing and ready to go live.
+You can also add a region.  For example if I want to target anyone that is in the US and in California, I would enter the region code of CA for California.  
+
+Furthermore, you can also filter by city.  For example if I want to target anyone that is in the US and California but also in the city of Los Angeles, I would enter the city name Los Angeles in the field.
+
+You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide/show the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
 
 == Frequently Asked Questions ==
 
@@ -38,6 +42,11 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 1. This screen shot shows the options.
 
 == Changelog ==
+
+= 1.1.0 =
+Added - Ability to geolocate by region
+Added - Ability to geolocate by city
+Update - Test mode is now against each individual row of settings
 
 = 1.0.0 =
 Release
