@@ -43,10 +43,10 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Changelog ==
 
-= 1.1.0 =
-Added - Ability to geolocate by region
-Added - Ability to geolocate by city
-Update - Test mode is now against each individual row of settings
+= 1.1.0 | 8-2-2014 =
+* Added - Ability to geolocate by region
+* Added - Ability to geolocate by city
+* Update - Test mode is now against each individual row of settings
 
 = 1.0.0 =
 Release
