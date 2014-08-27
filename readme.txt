@@ -4,7 +4,7 @@ Tags: woocommerce, products, conditional products, location, geolocation, splash
 WordPress requires at least: 3.9.1
 Tested up to: 3.9.1
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
