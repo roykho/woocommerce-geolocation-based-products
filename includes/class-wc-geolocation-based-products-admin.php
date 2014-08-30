@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WC_Geolocation_Based_Products_Admin {
+	private static $_this;
+
 	/**
 	 * init
 	 *
@@ -12,6 +14,8 @@ class WC_Geolocation_Based_Products_Admin {
 	 * @return bool
 	 */
 	public function __construct() {
+		self::$_this = $this;
+		
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 
 		add_action( 'wp_ajax_wc_geolocation_based_products_search_products_ajax', array( $this, 'search_products' ) );
@@ -19,6 +23,16 @@ class WC_Geolocation_Based_Products_Admin {
 		add_action( 'wc_geolocation_based_products_admin_save', array( $this, 'admin_settings_save' ) );
 
 		return true;
+	}
+
+	/**
+	 * public access to instance object
+	 *
+	 * @since 1.1.1
+	 * @return bool
+	 */
+	public function get_instance() {
+		return self::$_this;
 	}
 
 	/**

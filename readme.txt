@@ -4,7 +4,7 @@ Tags: woocommerce, products, conditional products, location, geolocation, splash
 WordPress requires at least: 3.9.1
 Tested up to: 3.9.1
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,8 +20,6 @@ A WooCommerce plugin/extension that adds ability for your store to show/hide pro
 2. Upload the folder `woocommerce-geolocation-based-products` to the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Click on settings link to get to the settings page or get to the settings page by clicking on Geolocation link under WooCommerce Products Menu.
-
-== Usage ==
 
 You can add many different countries in which you want the settings to apply to.  You do this by adding a row and setting the 2 letter country code in which you want to apply to.  For example "US".  Then you set whether you want to hide certain product categories or just products themselves.  You may select more than one for each.
 
@@ -42,6 +40,9 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 1. This screen shot shows the options.
 
 == Changelog ==
+
+= 1.1.2 | 9-02-2014 =
+* Added - Instance variable for instance targetting
 
 = 1.1.1 | 8-27-2014 =
 * Added - missing dependency files to check WC active

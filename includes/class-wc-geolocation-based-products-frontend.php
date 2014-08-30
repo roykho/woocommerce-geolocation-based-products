@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WC_Geolocation_Based_Products_Frontend {
+	private static $_this;
 
 	var $location_data;
 	var $exclusion;
@@ -16,6 +17,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function __construct() {
+		self::$_this = $this;
 
 		add_action( 'pre_get_posts', array( $this, 'filter_query' ) );
 
@@ -29,6 +31,16 @@ class WC_Geolocation_Based_Products_Frontend {
 		return true;
 	}
 
+	/**
+	 * public access to instance object
+	 *
+	 * @since 1.1.1
+	 * @return bool
+	 */
+	public function get_instance() {
+		return self::$_this;
+	}
+	
 	/**
 	 * gets the user country
 	 *
