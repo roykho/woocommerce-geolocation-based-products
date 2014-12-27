@@ -1,10 +1,10 @@
 === WooCommerce Geolocation Based Products ===
-Contributors: splashingpixels.com
-Tags: woocommerce, products, conditional products, location, geolocation, splashing pixels, roy ho
+Contributors: royho
+Tags: woocommerce, products, conditional products, location, geolocation, roy ho
 WordPress requires at least: 3.9.1
-Tested up to: 3.9.1
+Tested up to: 4.1
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,9 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 1. This screen shot shows the options.
 
 == Changelog ==
+
+= 1.1.3 | 12-29-2014 =
+* Update - Cleaned up code
 
 = 1.1.2 | 9-02-2014 =
 * Added - Instance variable for instance targetting
