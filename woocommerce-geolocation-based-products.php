@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WooCommerce Geolocation Based Products
-Plugin URI: http://royho.me/
+Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 Description: A WooCommerce plugin/extension that adds ability for your store to show/hide products based on visitors geolocation.
 Version: 1.1.3
 Author: Roy Ho

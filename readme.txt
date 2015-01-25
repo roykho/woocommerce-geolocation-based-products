@@ -1,10 +1,13 @@
 === WooCommerce Geolocation Based Products ===
 Contributors: royho
 Tags: woocommerce, products, conditional products, location, geolocation, roy ho
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TPFCAQV2VEQE2
 WordPress requires at least: 3.9.1
 Tested up to: 4.1
 WooCommerce requires at least: 2.1.12
 Stable tag: 1.1.3
+Author URI: http://royho.me
+Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,6 +41,8 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 == Screenshots ==
 
 1. This screen shot shows the options.
+
+== Upgrade Notice ==
 
 == Changelog ==
 
