@@ -3,6 +3,15 @@ jQuery( document ).ready( function( $ ) {
 
 	// create namespace to avoid any possible conflicts
 	$.wc_geolocation_based_products_admin = {
+		runTipTip: function() {
+			$( '.help_tip' ).tipTip({
+				'attribute' : 'data-tip',
+				'fadeIn' : 50,
+				'fadeOut' : 50,
+				'delay' : 200
+			});
+		},
+
 		runChosen: function() {
 			// ajax chosen product search
 			$( 'select.wc-geolocation-based-products-choose-products' ).each( function() {
@@ -77,6 +86,8 @@ jQuery( document ).ready( function( $ ) {
 
 				$( 'input.wc-geolocation-based-products-test', this ).prop( 'name', replacedName );
 			});
+
+			$.wc_geolocation_based_products_admin.runTipTip();
 		},
 
 		init: function() {
@@ -166,6 +177,8 @@ jQuery( document ).ready( function( $ ) {
 
 				return true;
 			});
+
+			$.wc_geolocation_based_products_admin.runTipTip();
 		}
 	}; // close namespace
 	

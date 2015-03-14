@@ -45,7 +45,7 @@ class WC_Geolocation_Based_Products_Admin {
 	public function admin_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'ajax-chosen', 'chosen' ), '', true );
+		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'ajax-chosen', 'chosen', 'jquery-tiptip' ), '', true );
 
 		wp_enqueue_script( 'geolocation_based_products_admin_script' );
 
@@ -55,7 +55,9 @@ class WC_Geolocation_Based_Products_Admin {
 		);
 		
 		wp_localize_script( 'geolocation_based_products_admin_script', 'wc_geolocation_based_products_local', $localized_vars );
-
+		
+		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
+		
 		wp_enqueue_style( 'geolocation_based_products_admin_style', plugins_url( 'plugin-assets/css/admin.css', dirname( __FILE__ ) ) );
 
 		return true;
@@ -159,17 +161,34 @@ class WC_Geolocation_Based_Products_Admin {
 				<tr>
 					<th><?php _e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
 
-					<th width="5%"><?php _e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'A 2 letter country code, e.g. US.  This is required. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+					<th width="5%"><?php _e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>
+						
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'A 2 letter country code, e.g. US.  This is required. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
 
-					<th width="10%"><?php _e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'A region code for your state or province, e.g. CA for California. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+					<th width="10%"><?php _e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'A region code for your state or province, e.g. CA for California. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
 
-					<th width="18%"><?php _e( 'City', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'A city name. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+					<th width="18%"><?php _e( 'City', 'woocommerce-geolocation-based-products' ); ?>
 
-					<th width="30%"><?php _e( 'Product Categories to Hide', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'Select all the product categories in which you want to hide for this country.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'A city name. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
 
-					<th width="30%"><?php _e( 'Products to Hide', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'Search for the products in which you want to hide for this country.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+					<th width="30%"><?php _e( 'Product Categories to Hide', 'woocommerce-geolocation-based-products' ); ?>
 
-					<th width="2%"><?php _e( 'Test Mode', 'woocommerce-geolocation-based-products' ); ?>&nbsp;<span class="tips" data-tip="<?php _e( 'Check the box to enable test mode for this rule. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>">[?]</span></th>
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'Product Categories to Hide.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
+
+					<th width="30%"><?php _e( 'Products to Hide', 'woocommerce-geolocation-based-products' ); ?>
+						
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'Search for the products in which you want to hide for this country.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
+
+					<th width="2%"><?php _e( 'Test Mode', 'woocommerce-geolocation-based-products' ); ?>
+						
+						<img class="help_tip" data-tip="<?php esc_attr_e( 'Check the box to enable test mode for this rule. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					</th>
 				</tr>
 			</thead>
 			<tfoot>

@@ -94,7 +94,7 @@ class WC_Geolocation_Based_Products {
 	 * @return string
 	 */
 	public function woocommerce_missing_notice() {
-		echo '<div class="error"><p>' . sprintf( __( 'WooCommerce Geolocation Based Products Plugin requires WooCommerce to be installed and active. %s', 'woocommerce-geolocation-based-products' ), '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>' ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( 'WooCommerce Geolocation Based Products Plugin requires WooCommerce to be installed and active. You can download %s here.', 'woocommerce-geolocation-based-products' ), '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>' ) . '</p></div>';
 	}
 
 	/**
