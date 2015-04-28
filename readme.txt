@@ -17,6 +17,16 @@ A WooCommerce plugin/extension that adds ability for your store to show/hide pro
 
 A WooCommerce plugin/extension that adds ability for your store to show/hide products based on visitors geolocation taken from IP address.
 
+You can add many different countries in which you want the settings to apply to.  You do this by adding a row and setting the 2 letter country code in which you want to apply to.  For example "US".  Then you set whether you want to hide certain product categories or just products themselves.  You may select more than one for each.
+
+You can also add a region.  For example if I want to target anyone that is in the US and in California, I would enter the region code of CA for California.  
+
+Furthermore, you can also filter by city.  For example if I want to target anyone that is in the US and California but also in the city of Los Angeles, I would enter the city name Los Angeles in the field.
+
+You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide/show the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
+
+There is no active support for this plugin here.  Please go here to contribute https://github.com/roykho/woocommerce-geolocation-based-products
+
 == Installation ==
 
 1. Be sure WooCommerce plugin is already installed.
@@ -36,7 +46,7 @@ You can also test out your settings as if you're visiting the site from another 
 
 = This plugin does not seem to working, anything I set to hide is not hiding. =
 
-This plugin utilizes the IP address of the visitor to obtain location information.  If this IP is somehow blocked or is unknown, there is no way for this plugin to know which country the visitor is from.  In this case, nothing will be hidden.
+This plugin utilizes the IP address of the visitor to obtain location information.  If this IP is somehow blocked or is unknown, there is no way for this plugin to know which country the visitor is from.  In this case, nothing will be hidden.  Furthermore, you can test the IP coming into your site using this http://ip-api.com/ to know which area it is determining the IP is from.  Sometimes this information could be wrong due to the IP servers have not been updated..etc.
 
 == Screenshots ==
 
