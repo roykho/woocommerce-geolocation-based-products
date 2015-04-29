@@ -422,9 +422,9 @@
   .chosen-container-multi .chosen-choices .search-choice .search-choice-close,
   .chosen-container .chosen-results-scroll-down span,
   .chosen-container .chosen-results-scroll-up span {
-    background-image: url('../images/chosen-sprite@2x.png') !important;
-    background-size: 52px 37px !important;
-    background-repeat: no-repeat !important;
+	background-image: url('../images/chosen-sprite@2x.png') !important;
+	background-size: 52px 37px !important;
+	background-repeat: no-repeat !important;
   }
 }
 /* @end */
@@ -435,4 +435,8 @@ table.wc-geolocation-based-products-settings.widefat td.product-categories, tabl
 
 table.wc-geolocation-based-products-settings .tips {
 	color:#2ea2cc;
+}
+
+img.help_tip {
+	margin:0;
 }
