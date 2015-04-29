@@ -54,11 +54,18 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Upgrade Notice ==
 
+= 1.1.4 =
+
+* Fixed - Excluded product categories showing in WooCommerce product category widget
+* Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
+* Fixed - Product category count was not updated from the excluded products and product categories
+
 == Changelog ==
 
 = 1.1.4 | 04-30-2015 =
 * Fixed - Excluded product categories showing in WooCommerce product category widget
 * Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
+* Fixed - Product category count was not updated from the excluded products and product categories
 
 = 1.1.3 | 12-29-2014 =
 * Update - Cleaned up code
