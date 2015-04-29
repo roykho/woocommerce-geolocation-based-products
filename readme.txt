@@ -59,6 +59,7 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 * Fixed - Excluded product categories showing in WooCommerce product category widget
 * Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
 * Fixed - Product category count was not updated from the excluded products and product categories
+* Fixed - Tooltip was no longer popping up after WC 2.3
 
 == Changelog ==
 
@@ -66,6 +67,7 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 * Fixed - Excluded product categories showing in WooCommerce product category widget
 * Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
 * Fixed - Product category count was not updated from the excluded products and product categories
+* Fixed - Tooltip was no longer popping up after WC 2.3
 
 = 1.1.3 | 12-29-2014 =
 * Update - Cleaned up code
