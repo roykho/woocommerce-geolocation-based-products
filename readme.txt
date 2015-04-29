@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 WordPress requires at least: 3.9.1
 Tested up to: 4.1
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.1.4
+Stable tag: 1.2.0
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
@@ -54,22 +54,24 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Upgrade Notice ==
 
-= 1.1.4 =
+= 1.2.0 =
 
 * Fixed - Excluded product categories showing in WooCommerce product category widget
 * Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
 * Fixed - Product category count was not updated from the excluded products and product categories
 * Fixed - Tooltip was no longer popping up after WC 2.3
 * Fixed - Hide excluded products and product categories from menus
+* Added - POT file
 
 == Changelog ==
 
-= 1.1.4 | 04-30-2015 =
+= 1.2.0 | 04-30-2015 =
 * Fixed - Excluded product categories showing in WooCommerce product category widget
 * Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
 * Fixed - Product category count was not updated from the excluded products and product categories
 * Fixed - Tooltip was no longer popping up after WC 2.3
 * Fixed - Hide excluded products and product categories from menus
+* Added - POT file
 
 = 1.1.3 | 12-29-2014 =
 * Update - Cleaned up code
