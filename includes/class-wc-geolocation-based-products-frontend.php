@@ -158,9 +158,9 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		if ( isset( $saved_country ) && ! empty( $saved_country ) && strtolower( $saved_country ) === strtolower( $user_country ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -174,9 +174,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function country_isset( $saved_country ) {
 		if ( isset( $saved_country ) && ! empty( $saved_country ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -192,9 +192,9 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		if ( isset( $saved_region ) && ! empty( $saved_region ) && strtolower( $saved_region ) === strtolower( $user_region ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -208,9 +208,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function region_isset( $saved_region ) {
 		if ( isset( $saved_region ) && ! empty( $saved_region ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -226,9 +226,9 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		if ( isset( $saved_city ) && ! empty( $saved_city ) && strtolower( $saved_city ) === strtolower( $user_city ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -242,9 +242,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function city_isset( $saved_city ) {
 		if ( isset( $saved_city ) && ! empty( $saved_city ) ) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -262,6 +262,7 @@ class WC_Geolocation_Based_Products_Frontend {
 		}
 
 		if ( $this->exclusion ) {
+
 			$taxquery = array(
 				array(
 					'taxonomy' => 'product_cat',
@@ -273,10 +274,51 @@ class WC_Geolocation_Based_Products_Frontend {
 
 			$q->set( 'tax_query', $taxquery );
 
+			// single post
+			if ( is_single() ) {
+
+				$q->set( 'post__not_in', array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) ) );
+
+				return;
+			}
+
 			$q->set( 'post__not_in', $this->exclusion['products'] );
-    	} else {
-    		return;
-    	}
+		}
+
+		return;
+	}
+
+	/**
+	 * Get product ids that are excluded from specific categories
+	 * This is used for single product pages as tax_query doesn't work in single post
+	 *
+	 * @access public
+	 * @since 1.1.4
+	 * @return array $ids
+	 */
+	public function get_product_ids_from_excluded_cats() {
+		$args = array(
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'id',
+					'terms'    => $this->exclusion['product_cats'],
+					'operator' => 'IN'
+				)
+			),
+			'posts_per_page' => -1,
+			'fields'         => 'ids'
+		);
+
+		$ids = new WP_Query( $args );
+
+		wp_reset_postdata();
+		
+		if ( $ids->found_posts > 0 ) {
+			return $ids->posts;
+		}
+
+		return array();
 	}
 
 	/**
