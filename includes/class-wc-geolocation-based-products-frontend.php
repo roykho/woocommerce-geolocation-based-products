@@ -153,7 +153,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if country matches current user's country
+	 * Checks if country matches current user's country
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -171,7 +171,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if country isset
+	 * Checks if country isset
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -187,7 +187,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if region matches current user's region
+	 * Checks if region matches current user's region
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -205,7 +205,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if region isset
+	 * Checks if region isset
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -221,7 +221,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if city matches current user's city
+	 * Checks if city matches current user's city
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -239,7 +239,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * checks if city isset
+	 * Checks if city isset
 	 *
 	 * @access public
 	 * @since 1.1.0
@@ -255,7 +255,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * filters the query for output
+	 * Filters the query for output
 	 *
 	 * @access public
 	 * @since 1.0.0
@@ -329,7 +329,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * filter to hide categories from category view
+	 * Hide categories from category view
 	 *
 	 * @access public
 	 * @since 1.0.0 
@@ -338,11 +338,60 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function hide_from_categories_view( $args ) {
 		if ( $this->exclusion ) {	
 			$args['exclude'] = implode( ',', $this->exclusion['product_cats'] );
+
+			// this is expensive allow user to not use as they can choose to hide product counts
+			apply_filters( 'woocommerce_geolocation_based_products_update_category_count', add_filter( 'get_terms', array( $this, 'update_category_count' ) ) );
 		}
 
 		return $args;
 	}
 
+	/**
+	 * Update the product category products count
+	 *
+	 * @access public
+	 * @since 1.1.4
+	 * @return array $terms
+	 */
+	public function update_category_count( $terms ) {
+
+		$i = 0;
+
+		foreach( $terms as $term_obj ) {
+			$args = array(
+				'tax_query' => array(
+					array(
+						'taxonomy' => 'product_cat',
+						'field'    => 'id',
+						'terms'    => $term_obj->term_id,
+						'operator' => 'IN'
+					)
+				),
+				'posts_per_page' => -1,
+				'post__not_in'   => $this->exclusion['products'],
+				'fields'         => 'ids'
+			);
+
+			$ids = new WP_Query( $args );
+
+			wp_reset_postdata();
+
+			$terms[ $i ]->count = $ids->found_posts;
+
+			$i++;
+		}
+
+		return $terms;
+	}
+
+	/**
+	 * Hide products from products widget
+	 *
+	 * @access public
+	 * @since 1.0.0 
+	 * @param array $args
+	 * @return array $args
+	 */
 	public function hide_from_products_widget( $args ) {
 		if ( $this->exclusion ) {
 			$args['post__not_in'] = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
@@ -352,7 +401,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * gets the location data
+	 * Gets the location data
 	 *
 	 * attribution goes to ip-api.com for making this public API available
 	 *
