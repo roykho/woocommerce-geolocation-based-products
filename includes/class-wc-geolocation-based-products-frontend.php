@@ -22,7 +22,11 @@ class WC_Geolocation_Based_Products_Frontend {
 		add_action( 'pre_get_posts', array( $this, 'filter_query' ) );
 
 		// hide from category view
-		add_filter( 'woocommerce_product_subcategories_args', array( $this, 'hide_categories_view' ) );
+		add_filter( 'woocommerce_product_subcategories_args', array( $this, 'hide_from_categories_view' ) );
+
+		// hide from category widget
+		add_filter( 'woocommerce_product_categories_widget_dropdown_args', array( $this, 'hide_from_categories_view' ) );
+		add_filter( 'woocommerce_product_categories_widget_args', array( $this, 'hide_from_categories_view' ) );
 
 		$this->location_data = $this->get_location_data();
 
@@ -328,7 +332,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @since 1.0.0 
 	 * @return bool
 	 */
-	public function hide_categories_view( $args ) {
+	public function hide_from_categories_view( $args ) {
 		if ( $this->exclusion ) {	
 			$args['exclude'] = implode( ',', $this->exclusion['product_cats'] );
 		}
