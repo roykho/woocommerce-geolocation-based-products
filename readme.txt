@@ -11,11 +11,11 @@ Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A WooCommerce plugin/extension that adds ability for your store to show/hide products based on visitors geolocation taken from IP address.
+A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation taken from IP address.
 
 == Description ==
 
-A WooCommerce plugin/extension that adds ability for your store to show/hide products based on visitors geolocation taken from IP address.
+A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation taken from IP address.
 
 You can add many different countries in which you want the settings to apply to.  You do this by adding a row and setting the 2 letter country code in which you want to apply to.  For example "US".  Then you set whether you want to hide certain product categories or just products themselves.  You may select more than one for each.
 
@@ -23,7 +23,7 @@ You can also add a region.  For example if I want to target anyone that is in th
 
 Furthermore, you can also filter by city.  For example if I want to target anyone that is in the US and California but also in the city of Los Angeles, I would enter the city name Los Angeles in the field.
 
-You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide/show the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
+You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
 
 There is no active support for this plugin here.  Please go here to contribute https://github.com/roykho/woocommerce-geolocation-based-products
 
@@ -40,7 +40,7 @@ You can also add a region.  For example if I want to target anyone that is in th
 
 Furthermore, you can also filter by city.  For example if I want to target anyone that is in the US and California but also in the city of Los Angeles, I would enter the city name Los Angeles in the field.
 
-You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide/show the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
+You can also test out your settings as if you're visiting the site from another country.  Enabling the testmode on a particular entry row, your site will hide the products/categories per the rules of that row.  Please note that you will need to use this especially when you're testing this on localhost as that IP will not be valid.  Be sure to turn off testmode when done testing and ready to go live.
 
 == Frequently Asked Questions ==
 
