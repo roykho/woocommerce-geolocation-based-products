@@ -28,6 +28,9 @@ class WC_Geolocation_Based_Products_Frontend {
 		add_filter( 'woocommerce_product_categories_widget_dropdown_args', array( $this, 'hide_from_categories_view' ) );
 		add_filter( 'woocommerce_product_categories_widget_args', array( $this, 'hide_from_categories_view' ) );
 
+		// hide from products widget
+		add_filter( 'woocommerce_products_widget_query_args', array( $this, 'hide_from_products_widget' ) );
+
 		$this->location_data = $this->get_location_data();
 
 		$this->exclusion = $this->get_exclusion();
@@ -340,6 +343,14 @@ class WC_Geolocation_Based_Products_Frontend {
 		return $args;
 	}
 
+	public function hide_from_products_widget( $args ) {
+		if ( $this->exclusion ) {
+			$args['post__not_in'] = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+		}
+
+		return $args;
+	}
+
 	/**
 	 * gets the location data
 	 *
@@ -367,9 +378,9 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		if ( isset( $response_body['status'] ) && $response_body['status'] === 'success' ) {
 			return $response_body;
-		} else {
-			return;
 		}
+
+		return;
 	}
 }
 
