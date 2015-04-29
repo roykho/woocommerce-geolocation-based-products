@@ -31,6 +31,9 @@ class WC_Geolocation_Based_Products_Frontend {
 		// hide from products widget
 		add_filter( 'woocommerce_products_widget_query_args', array( $this, 'hide_from_products_widget' ) );
 
+		// hide products from menu
+		add_filter( 'wp_nav_menu_objects', array( $this, 'hide_products_from_menu' ), 10, 2 );
+
 		$this->location_data = $this->get_location_data();
 
 		$this->exclusion = $this->get_exclusion();
@@ -407,6 +410,30 @@ class WC_Geolocation_Based_Products_Frontend {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Hide products from menu
+	 *
+	 * @access public
+	 * @since 1.1.4
+	 * @param array $atts HTML attributes
+	 * @param array $args config of the nav item
+	 * @return array $atts
+	 */
+	public function hide_products_from_menu( $items, $args ) {
+		if ( $this->exclusion ) {
+			foreach( $items as $key => $item ) {
+				if ( in_array( (int) $item->object_id, $this->exclusion['products'] ) 
+					|| in_array( (int) $item->object_id, $this->exclusion['product_cats'] ) 
+					|| in_array( (int) $item->object_id, $this->get_product_ids_from_excluded_cats() )
+				) {
+					unset( $items[ $key ] );
+				}
+			}
+		}
+
+		return $items;
 	}
 
 	/**
