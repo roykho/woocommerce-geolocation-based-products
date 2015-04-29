@@ -357,28 +357,37 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		$i = 0;
 
-		foreach( $terms as $term_obj ) {
-			$args = array(
-				'tax_query' => array(
-					array(
-						'taxonomy' => 'product_cat',
-						'field'    => 'id',
-						'terms'    => $term_obj->term_id,
-						'operator' => 'IN'
-					)
-				),
-				'posts_per_page' => -1,
-				'post__not_in'   => $this->exclusion['products'],
-				'fields'         => 'ids'
-			);
+		if ( $this->exclusion ) {
+			foreach( $terms as $term_obj ) {
+				$args = array(
+					'tax_query' => array(
+						'relation' => 'AND',
+						array(
+							'taxonomy' => 'product_cat',
+							'field'    => 'id',
+							'terms'    => $term_obj->term_id,
+							'operator' => 'IN'
+						),
+						array(
+							'taxonomy' => 'product_cat',
+							'field'    => 'id',
+							'terms'    => $this->exclusion['product_cats'],
+							'operator' => 'NOT IN'
+						)
+					),
+					'posts_per_page' => -1,
+					'post__not_in'   => $this->exclusion['products'],
+					'fields'         => 'ids'
+				);
 
-			$ids = new WP_Query( $args );
+				$ids = new WP_Query( $args );
 
-			wp_reset_postdata();
+				wp_reset_postdata();
 
-			$terms[ $i ]->count = $ids->found_posts;
+				$terms[ $i ]->count = $ids->found_posts;
 
-			$i++;
+				$i++;
+			}
 		}
 
 		return $terms;
