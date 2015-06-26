@@ -59,7 +59,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_country
 	 */
 	public function get_user_country() {
-		$user_country = apply_filters( 'wc_geolocation_based_products_user_country', $this->location_data['countryCode'] );
+		$user_country = apply_filters( 'wc_geolocation_based_products_user_country', $this->location_data->country_code );
 
 		return $user_country;
 	}
@@ -72,7 +72,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_region
 	 */
 	public function get_user_region() {
-		$user_region = apply_filters( 'wc_geolocation_based_products_user_region', $this->location_data['region'] );
+		$user_region = apply_filters( 'wc_geolocation_based_products_user_region', $this->location_data->region_code );
 
 		return $user_region;
 	}
@@ -85,7 +85,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_city
 	 */
 	public function get_user_city() {
-		$user_city = apply_filters( 'wc_geolocation_based_products_user_city', $this->location_data['city'] );
+		$user_city = apply_filters( 'wc_geolocation_based_products_user_city', $this->location_data->city );
 
 		return $user_city;
 	}
@@ -164,7 +164,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function country_is_matched( $saved_country ) {
-		$user_country = $this->location_data['countryCode'];
+		$user_country = $this->location_data->country_code;
 
 		if ( isset( $saved_country ) && ! empty( $saved_country ) && strtolower( $saved_country ) === strtolower( $user_country ) ) {
 			return true;
@@ -198,7 +198,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function region_is_matched( $saved_region ) {
-		$user_region = $this->location_data['region'];
+		$user_region = $this->location_data->region_code;
 
 		if ( isset( $saved_region ) && ! empty( $saved_region ) && strtolower( $saved_region ) === strtolower( $user_region ) ) {
 			return true;
@@ -232,7 +232,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function city_is_matched( $saved_city ) {
-		$user_city = $this->location_data['city'];
+		$user_city = $this->location_data->city;
 
 		if ( isset( $saved_city ) && ! empty( $saved_city ) && strtolower( $saved_city ) === strtolower( $user_city ) ) {
 			return true;
@@ -439,7 +439,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	/**
 	 * Gets the location data
 	 *
-	 * attribution goes to ip-api.com for making this public API available
+	 * attribution goes to freegeoip.net for making this public API available
 	 *
 	 * @access public
 	 * @since 1.0.0
@@ -451,18 +451,18 @@ class WC_Geolocation_Based_Products_Frontend {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
-		$url = 'http://ip-api.com/php/' . $ip;
+		$url = 'https://freegeoip.net/json/' . $ip;
 
 		$args = apply_filters( 'wc_geolocation_based_products_get_location_args', array(
 			'sslverify' => false
 		) );
 		
-		$response = wp_remote_post( $url, $args );
+		$response = wp_remote_get( $url, $args );
 
-		$response_body = @maybe_unserialize( wp_remote_retrieve_body( $response ) );
+		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( isset( $response_body['status'] ) && $response_body['status'] === 'success' ) {
-			return $response_body;
+		if ( isset( $response['response']['message'] ) && $response['response']['message'] == 'OK' ) {
+			return json_decode( $response_body );
 		}
 
 		return;

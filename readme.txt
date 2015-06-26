@@ -11,7 +11,7 @@ Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation taken from IP address.
+A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation taken from IP address.  Attribution goes to https://freegeoip.net/ for providing this for free use.
 
 == Description ==
 
@@ -46,13 +46,18 @@ You can also test out your settings as if you're visiting the site from another 
 
 = This plugin does not seem to working, anything I set to hide is not hiding. =
 
-This plugin utilizes the IP address of the visitor to obtain location information.  If this IP is somehow blocked or is unknown, there is no way for this plugin to know which country the visitor is from.  In this case, nothing will be hidden.  Furthermore, you can test the IP coming into your site using this http://ip-api.com/ to know which area it is determining the IP is from.  Sometimes this information could be wrong due to the IP servers have not been updated..etc.
+This plugin utilizes the IP address of the visitor to obtain location information.  If this IP is somehow blocked or is unknown, there is no way for this plugin to know which country the visitor is from.  In this case, nothing will be hidden.  Furthermore, you can test the IP coming into your site using this https://freegeoip.net/ to know which area it is determining the IP is from.  Sometimes this information could be wrong due to the IP servers have not been updated..etc.
 
 == Screenshots ==
 
 1. This screen shot shows the options.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+
+* Removed - IP check API from ip-api.com
+* Added - IP check API from https://freegeoip.net
 
 = 1.2.0 =
 
@@ -64,6 +69,10 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 * Added - POT file
 
 == Changelog ==
+
+= 1.3.0 | 06-25-2015 =
+* Removed - IP check API from ip-api.com
+* Added - IP check API from https://freegeoip.net
 
 = 1.2.0 | 04-30-2015 =
 * Fixed - Excluded product categories showing in WooCommerce product category widget
