@@ -3,9 +3,9 @@ Contributors: royho
 Tags: woocommerce, products, conditional products, location, geolocation, roy ho
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TPFCAQV2VEQE2
 WordPress requires at least: 3.9.1
-Tested up to: 4.1
+Tested up to: 4.2
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
