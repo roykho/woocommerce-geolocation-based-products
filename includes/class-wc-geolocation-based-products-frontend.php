@@ -361,6 +361,10 @@ class WC_Geolocation_Based_Products_Frontend {
 		$i = 0;
 
 		if ( $this->exclusion ) {
+			if ( ! is_object( $terms[0] ) ) {
+				return $terms;
+			}
+
 			foreach( $terms as $term_obj ) {
 				$args = array(
 					'tax_query' => array(
@@ -459,13 +463,24 @@ class WC_Geolocation_Based_Products_Frontend {
 		
 		$response = wp_remote_get( $url, $args );
 
-		$response_body = wp_remote_retrieve_body( $response );
+		if ( is_wp_error( $response ) ) {
+			$error_string = $response->get_error_message();
 
-		if ( isset( $response['response']['message'] ) && $response['response']['message'] == 'OK' ) {
+			if ( defined( 'WC_DEBUG' ) && WC_DEBUG ) {
+				echo '<pre>' . $error_string . '</pre>';
+			}
+
+			return;
+		}
+
+		if ( isset( $response['response']['message'] ) && $response['response']['message'] === 'OK' ) {
+
+			$response_body = wp_remote_retrieve_body( $response );
+
 			return json_decode( $response_body );
 		}
 
-		return;
+		return true;
 	}
 }
 

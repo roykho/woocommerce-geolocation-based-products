@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 WordPress requires at least: 3.9.1
 Tested up to: 4.2
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
@@ -54,21 +54,15 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Upgrade Notice ==
 
-= 1.3.0 =
-
-* Removed - IP check API from ip-api.com
-* Added - IP check API from https://freegeoip.net
-
-= 1.2.0 =
-
-* Fixed - Excluded product categories showing in WooCommerce product category widget
-* Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
-* Fixed - Product category count was not updated from the excluded products and product categories
-* Fixed - Tooltip was no longer popping up after WC 2.3
-* Fixed - Hide excluded products and product categories from menus
-* Added - POT file
+= 1.3.1 =
+* Fixed - Suppress error when geoip API returning an error at times
+* Fixed - Category widget count sometimes displays a warning when debug is on
 
 == Changelog ==
+
+= 1.3.1 | 07-11-2015 =
+* Fixed - Suppress error when geoip API returning an error at times
+* Fixed - Category widget count sometimes displays a warning when debug is on
 
 = 1.3.0 | 06-25-2015 =
 * Removed - IP check API from ip-api.com
