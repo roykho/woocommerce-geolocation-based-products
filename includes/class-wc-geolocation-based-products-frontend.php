@@ -31,6 +31,15 @@ class WC_Geolocation_Based_Products_Frontend {
 		// hide from products widget
 		add_filter( 'woocommerce_products_widget_query_args', array( $this, 'hide_from_products_widget' ) );
 
+		// hide related products
+		add_filter( 'woocommerce_related_products_args', array( $this, 'hide_related_products' ) );
+
+		// hide upsell products
+		add_filter( 'woocommerce_product_upsell_ids', array( $this, 'hide_upsell_products' ) );
+
+		// hide crossell products
+		add_filter( 'woocommerce_product_crosssell_ids', array( $this, 'hide_crosssell_products' ) );
+
 		// hide products from menu
 		add_filter( 'wp_nav_menu_objects', array( $this, 'hide_products_from_menu' ), 10, 2 );
 
@@ -414,6 +423,80 @@ class WC_Geolocation_Based_Products_Frontend {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Hide related products
+	 *
+	 * @access public
+	 * @since 1.3.2
+	 * @version 1.3.2
+	 * @param array $args
+	 * @return array $args
+	 */
+	public function hide_related_products( $args ) {
+		if ( $this->exclusion ) {
+			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+
+			foreach( $args['post__in'] as $k => $id ) {
+				if ( in_array( (int) $id, $excluded_ids ) ) {
+					unset( $args['post__in'][ $k ] );
+				}
+			}
+
+			// set a non existing id so it won't display all products when empty
+			if ( empty( $args['post__in'] ) ) {
+				$args['post__in'] = array( 0 );
+			}
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Hide upsell products
+	 *
+	 * @access public
+	 * @since 1.3.2 
+	 * @version 1.3.2
+	 * @param array $ids
+	 * @return array $ids
+	 */
+	public function hide_upsell_products( $ids ) {
+		if ( $this->exclusion ) {
+			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+
+			foreach( $ids as $k => $id ) {
+				if ( in_array( (int) $id, $excluded_ids ) ) {
+					unset( $ids[ $k ] );
+				}
+			}
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * Hide crosssell products
+	 *
+	 * @access public
+	 * @since 1.3.2 
+	 * @version 1.3.2
+	 * @param array $ids
+	 * @return array $ids
+	 */
+	public function hide_crosssell_products( $ids ) {
+		if ( $this->exclusion ) {
+			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+
+			foreach( $ids as $k => $id ) {
+				if ( in_array( (int) $id, $excluded_ids ) ) {
+					unset( $ids[ $k ] );
+				}
+			}
+		}
+
+		return $ids;
 	}
 
 	/**

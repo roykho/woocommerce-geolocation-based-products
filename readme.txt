@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 WordPress requires at least: 3.9.1
 Tested up to: 4.2
 WooCommerce requires at least: 2.1.12
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
@@ -54,11 +54,17 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Upgrade Notice ==
 
+= 1.3.2 =
+* Fixed - Related, crosssell and upsell products were not hiding
+
 = 1.3.1 =
 * Fixed - Suppress error when geoip API returning an error at times
 * Fixed - Category widget count sometimes displays a warning when debug is on
 
 == Changelog ==
+
+= 1.3.2 | 09-13-2015 =
+* Fixed - Related, crosssell and upsell products were not hiding
 
 = 1.3.1 | 07-11-2015 =
 * Fixed - Suppress error when geoip API returning an error at times

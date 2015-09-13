@@ -1,18 +1,17 @@
 <?php
-/*
-Plugin Name: WooCommerce Geolocation Based Products
-Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
-Description: A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation.
-Version: 1.3.1
-Author: Roy Ho
-Author URI: http://royho.me
-
-Copyright: (c) 2014 Roy Ho
-
-License: GNU General Public License v3.0
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-
-*/
+/**
+ * Plugin Name: WooCommerce Geolocation Based Products
+ * Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
+ * Description: A WooCommerce plugin/extension that adds ability for your store to hide products based on visitors geolocation.
+ * Version: 1.3.2
+ * Author: Roy Ho
+ * Author URI: http://royho.me
+ * Text Domain: woocommerce-geolocation-based-products
+ * Domain Path: /languages
+ * 
+ * License: GNU General Public License v3.0
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -28,7 +27,7 @@ if ( ! class_exists( 'WC_Geolocation_Based_Products' ) ) :
 class WC_Geolocation_Based_Products {
 	private static $_this;
 
-	const WC_GEOLOCATION_BASED_PRODUCTS_VERSION = '1.3.1';
+	const WC_GEOLOCATION_BASED_PRODUCTS_VERSION = '1.3.2';
 	
 	/**
 	 * init
