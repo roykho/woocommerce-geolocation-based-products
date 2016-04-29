@@ -45,7 +45,7 @@ class WC_Geolocation_Based_Products_Admin {
 	public function admin_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'ajax-chosen', 'chosen', 'jquery-tiptip' ), '', true );
+		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'ajax-chosen', 'chosen', 'jquery-tiptip' ), WC_GEOLOCATION_BASED_PRODUCTS_VERSION, true );
 
 		wp_enqueue_script( 'geolocation_based_products_admin_script' );
 

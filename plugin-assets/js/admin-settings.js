@@ -185,4 +185,4 @@ jQuery( document ).ready( function( $ ) {
 	// run init
 	$.wc_geolocation_based_products_admin.init();
 // end document ready
-});	
+});

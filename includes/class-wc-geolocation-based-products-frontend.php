@@ -6,18 +6,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Geolocation_Based_Products_Frontend {
 	private static $_this;
 
-	var $location_data;
-	var $exclusion;
+	public $location_data;
+	public $exclusion;
+	public $geolocate;
 
 	/**
 	 * init
 	 *
 	 * @access public
 	 * @since 1.0.0
+	 * @version 1.4.0
 	 * @return bool
 	 */
-	public function __construct() {
+	public function __construct( WC_Geolocation_Based_Products_Geolocate $geolocate ) {
 		self::$_this = $this;
+
+		$this->geolocate     = $geolocate;
+		$this->location_data = $this->get_location_data();
+		$this->exclusion     = $this->get_exclusion();
 
 		add_action( 'pre_get_posts', array( $this, 'filter_query' ) );
 
@@ -43,10 +49,6 @@ class WC_Geolocation_Based_Products_Frontend {
 		// hide products from menu
 		add_filter( 'wp_nav_menu_objects', array( $this, 'hide_products_from_menu' ), 10, 2 );
 
-		$this->location_data = $this->get_location_data();
-
-		$this->exclusion = $this->get_exclusion();
-
 		return true;
 	}
 
@@ -68,7 +70,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_country
 	 */
 	public function get_user_country() {
-		$user_country = apply_filters( 'wc_geolocation_based_products_user_country', $this->location_data->country_code );
+		$user_country = apply_filters( 'wc_geolocation_based_products_user_country', $this->location_data['country_code'] );
 
 		return $user_country;
 	}
@@ -81,7 +83,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_region
 	 */
 	public function get_user_region() {
-		$user_region = apply_filters( 'wc_geolocation_based_products_user_region', $this->location_data->region_code );
+		$user_region = apply_filters( 'wc_geolocation_based_products_user_region', $this->location_data['region_code'] );
 
 		return $user_region;
 	}
@@ -94,7 +96,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return string $user_city
 	 */
 	public function get_user_city() {
-		$user_city = apply_filters( 'wc_geolocation_based_products_user_city', $this->location_data->city );
+		$user_city = apply_filters( 'wc_geolocation_based_products_user_city', $this->location_data['city'] );
 
 		return $user_city;
 	}
@@ -125,7 +127,6 @@ class WC_Geolocation_Based_Products_Frontend {
 					$exclude = true;
 
 				} else {
-
 					// check if country is set and matched
 					if ( $this->country_is_matched( $row['countrys'] ) && ( $this->region_isset( $row['regions'] ) || $this->city_isset( $row['cities'] ) ) ) {
 						// if both region and city is set they both have to match
@@ -172,26 +173,10 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @param string $saved_country | saved country setting to match
 	 * @return bool
 	 */
-	public function country_is_matched( $saved_country ) {
-		$user_country = $this->location_data->country_code;
+	public function country_is_matched( $saved_country = null ) {
+		$user_country = $this->get_user_country();
 
-		if ( isset( $saved_country ) && ! empty( $saved_country ) && strtolower( $saved_country ) === strtolower( $user_country ) ) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Checks if country isset
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param string $saved_country | saved country setting to match
-	 * @return bool
-	 */
-	public function country_isset( $saved_country ) {
-		if ( isset( $saved_country ) && ! empty( $saved_country ) ) {
+		if ( ! empty( $saved_country ) && strtolower( $saved_country ) === strtolower( $user_country ) ) {
 			return true;
 		}
 		
@@ -206,10 +191,10 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @param string $saved_region | saved region setting to match
 	 * @return bool
 	 */
-	public function region_is_matched( $saved_region ) {
-		$user_region = $this->location_data->region_code;
+	public function region_is_matched( $saved_region = null ) {
+		$user_region = $this->get_user_region();
 
-		if ( isset( $saved_region ) && ! empty( $saved_region ) && strtolower( $saved_region ) === strtolower( $user_region ) ) {
+		if ( ! empty( $saved_region ) && strtolower( $saved_region ) === strtolower( $user_region ) ) {
 			return true;
 		}
 		
@@ -224,8 +209,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @param string $saved_region | saved region setting to match
 	 * @return bool
 	 */
-	public function region_isset( $saved_region ) {
-		if ( isset( $saved_region ) && ! empty( $saved_region ) ) {
+	public function region_isset( $saved_region = null ) {
+		if ( ! empty( $saved_region ) ) {
 			return true;
 		}
 		
@@ -240,10 +225,10 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @param string $saved_city | saved city setting to match
 	 * @return bool
 	 */
-	public function city_is_matched( $saved_city ) {
-		$user_city = $this->location_data->city;
+	public function city_is_matched( $saved_city = null ) {
+		$user_city = $this->get_user_city();
 
-		if ( isset( $saved_city ) && ! empty( $saved_city ) && strtolower( $saved_city ) === strtolower( $user_city ) ) {
+		if ( ! empty( $saved_city ) && strtolower( $saved_city ) === strtolower( $user_city ) ) {
 			return true;
 		}
 		
@@ -258,8 +243,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @param string $saved_city | saved city setting to match
 	 * @return bool
 	 */
-	public function city_isset( $saved_city ) {
-		if ( isset( $saved_city ) && ! empty( $saved_city ) ) {
+	public function city_isset( $saved_city = null ) {
+		if ( ! empty( $saved_city ) ) {
 			return true;
 		}
 		
@@ -366,7 +351,6 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $terms
 	 */
 	public function update_category_count( $terms ) {
-
 		$i = 0;
 
 		if ( $this->exclusion ) {
@@ -526,45 +510,21 @@ class WC_Geolocation_Based_Products_Frontend {
 	/**
 	 * Gets the location data
 	 *
-	 * attribution goes to freegeoip.net for making this public API available
-	 *
 	 * @access public
 	 * @since 1.0.0
-	 * @param string $ip | the ip to check
-	 * @return array $response_body
+	 * @version 1.4.0
+	 * @return array $location
 	 */
-	public function get_location_data( $ip = '' ) {
-		if ( empty( $ip ) ) {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
+	public function get_location_data() {
+		$logger = new WC_Logger();
 
-		$url = 'https://freegeoip.net/json/' . $ip;
-
-		$args = apply_filters( 'wc_geolocation_based_products_get_location_args', array(
-			'sslverify' => false
-		) );
-		
-		$response = wp_remote_get( $url, $args );
-
-		if ( is_wp_error( $response ) ) {
-			$error_string = $response->get_error_message();
-
-			if ( defined( 'WC_DEBUG' ) && WC_DEBUG ) {
-				echo '<pre>' . $error_string . '</pre>';
-			}
-
+		try {
+			return $this->geolocate->geolocate_ip();
+		} catch( Exception $e ) {
+			$logger->add( 'wc_geolocation_based_products', $e->getMessage() );
 			return;
 		}
-
-		if ( isset( $response['response']['message'] ) && $response['response']['message'] === 'OK' ) {
-
-			$response_body = wp_remote_retrieve_body( $response );
-
-			return json_decode( $response_body );
-		}
-
-		return true;
 	}
 }
 
-new WC_Geolocation_Based_Products_Frontend();
+new WC_Geolocation_Based_Products_Frontend( new WC_Geolocation_Based_Products_Geolocate );
