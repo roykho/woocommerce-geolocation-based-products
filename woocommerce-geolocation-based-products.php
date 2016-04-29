@@ -11,6 +11,8 @@
  * 
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
