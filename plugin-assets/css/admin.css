@@ -1,7 +1,25 @@
 table.wc-glbp-settings.widefat td.product-categories, table.wc-glbp-settings.widefat td.products {
-	overflow:visible;
+	overflow: visible;
 }
 
 .wc-glbp-categories {
-	display:none;
+	display: none;
+}
+
+.wc-glbp-sort::before {
+	content: "\e032";
+	font-family: "woocommerce";
+	text-align: center;
+	line-height: 1;
+	width: 17px;
+	display: block;
+	height: 100%;
+	color: #999;
+	cursor: move;
+	position: relative;
+	top: 5px;
+}
+
+.wc-glbp-sort {
+	vertical-align: center;
 }
