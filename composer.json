@@ -1,0 +1,12 @@
+{
+    "name": "roykho/woocommerce-geolocation-based-products",
+    "authors": [
+        {
+            "name": "roykho",
+            "email": "roykho77@gmail.com"
+        }
+    ],
+    "require": {
+        "geoip2/geoip2": "~2.0"
+    }
+}
