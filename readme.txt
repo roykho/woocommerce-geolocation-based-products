@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 WordPress requires at least: 3.9.1
 Tested up to: 4.5.1
 WooCommerce requires at least: 2.5.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
@@ -54,6 +54,9 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 
 == Upgrade Notice ==
 
+= 1.4.1 =
+* Update - Missing Vendor folder when uploading to repo
+
 = 1.4.0 =
 * Update - Removed freegeoip infavor of MaxMind GeoIP
 * Update - Removed Chosen for Select2
@@ -66,6 +69,9 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 * Fixed - Category widget count sometimes displays a warning when debug is on
 
 == Changelog ==
+
+= 1.4.1 | 04-30-2016 =
+* Update - Missing Vendor folder when uploading to repo
 
 = 1.4.0 | 04-29-2016 =
 * Update - Removed freegeoip infavor of MaxMind GeoIP
