@@ -128,22 +128,22 @@ class WC_Geolocation_Based_Products_Frontend {
 
 				} else {
 					// check if country is set and matched
-					if ( $this->country_is_matched( $row['countrys'] ) && ( $this->region_isset( $row['regions'] ) || $this->city_isset( $row['cities'] ) ) ) {
+					if ( $this->country_is_matched( $row['country'] ) && ( $this->region_isset( $row['region'] ) || $this->city_isset( $row['city'] ) ) ) {
 						// if both region and city is set they both have to match
-						if ( $this->region_isset( $row['regions'] ) && $this->city_isset( $row['cities'] ) ) {
-							if ( $this->region_is_matched( $row['regions'] ) && $this->city_is_matched( $row['cities'] ) ) {
+						if ( $this->region_isset( $row['region'] ) && $this->city_isset( $row['city'] ) ) {
+							if ( $this->region_is_matched( $row['region'] ) && $this->city_is_matched( $row['city'] ) ) {
 								$exclude = true;
 							}
-						} elseif ( $this->region_isset( $row['regions'] ) ) {
-							if ( $this->region_is_matched( $row['regions'] ) ) {
+						} elseif ( $this->region_isset( $row['region'] ) ) {
+							if ( $this->region_is_matched( $row['region'] ) ) {
 								$exclude = true;
 							}	
-						} elseif ( $this->city_isset( $row['cities'] ) ) {
-							if ( $this->city_is_matched( $row['cities'] ) ) {
+						} elseif ( $this->city_isset( $row['city'] ) ) {
+							if ( $this->city_is_matched( $row['city'] ) ) {
 								$exclude = true;
 							}
 						}
-					} elseif ( $this->country_is_matched( $row['countrys'] ) ) {
+					} elseif ( $this->country_is_matched( $row['country'] ) ) {
 						$exclude = true;
 					}
 				}
@@ -275,18 +275,20 @@ class WC_Geolocation_Based_Products_Frontend {
 					'operator' => 'NOT IN'
 				) 
 			);
+			
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
 
 			$q->set( 'tax_query', $taxquery );
 
 			// single post
 			if ( is_single() ) {
 
-				$q->set( 'post__not_in', array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) ) );
+				$q->set( 'post__not_in', array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) ) );
 
 				return;
 			}
 
-			$q->set( 'post__not_in', $this->exclusion['products'] );
+			$q->set( 'post__not_in', $product_ids );
 		}
 
 		return;
@@ -358,6 +360,8 @@ class WC_Geolocation_Based_Products_Frontend {
 				return $terms;
 			}
 
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
 			foreach( $terms as $term_obj ) {
 				$args = array(
 					'tax_query' => array(
@@ -376,7 +380,7 @@ class WC_Geolocation_Based_Products_Frontend {
 						)
 					),
 					'posts_per_page' => -1,
-					'post__not_in'   => $this->exclusion['products'],
+					'post__not_in'   => $product_ids,
 					'fields'         => 'ids'
 				);
 
@@ -403,7 +407,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_from_products_widget( $args ) {
 		if ( $this->exclusion ) {
-			$args['post__not_in'] = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
+			$args['post__not_in'] = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 		}
 
 		return $args;
@@ -420,7 +426,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_related_products( $args ) {
 		if ( $this->exclusion ) {
-			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
+			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
 			foreach( $args['post__in'] as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
@@ -448,7 +456,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_upsell_products( $ids ) {
 		if ( $this->exclusion ) {
-			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
+			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
 			foreach( $ids as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
@@ -471,7 +481,9 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_crosssell_products( $ids ) {
 		if ( $this->exclusion ) {
-			$excluded_ids = array_unique( array_merge( $this->exclusion['products'], $this->get_product_ids_from_excluded_cats() ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
+			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
 			foreach( $ids as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
@@ -494,8 +506,10 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_products_from_menu( $items, $args ) {
 		if ( $this->exclusion ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+
 			foreach( $items as $key => $item ) {
-				if ( in_array( (int) $item->object_id, $this->exclusion['products'] ) 
+				if ( in_array( (int) $item->object_id, $product_ids ) 
 					|| in_array( (int) $item->object_id, $this->exclusion['product_cats'] ) 
 					|| in_array( (int) $item->object_id, $this->get_product_ids_from_excluded_cats() )
 				) {

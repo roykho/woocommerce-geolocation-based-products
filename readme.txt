@@ -3,7 +3,7 @@ Contributors: royho
 Tags: woocommerce, products, conditional products, location, geolocation, roy ho
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TPFCAQV2VEQE2
 WordPress requires at least: 3.9.1
-Tested up to: 4.2
+Tested up to: 4.5.1
 WooCommerce requires at least: 2.1.12
 Stable tag: 1.3.2
 Author URI: http://royho.me

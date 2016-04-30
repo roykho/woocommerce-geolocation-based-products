@@ -4,163 +4,145 @@ jQuery( document ).ready( function( $ ) {
 	// create namespace to avoid any possible conflicts
 	$.wc_geolocation_based_products_admin = {
 		runTipTip: function() {
-			$( '.help_tip' ).tipTip({
-				'attribute' : 'data-tip',
-				'fadeIn' : 50,
-				'fadeOut' : 50,
-				'delay' : 200
-			});
-		},
-
-		runChosen: function() {
-			// ajax chosen product search
-			$( 'select.wc-geolocation-based-products-choose-products' ).each( function() {
-				$( this ).ajaxChosen({
-					method:            'GET',
-					url:               wc_geolocation_based_products_local.ajaxURL,
-					dataType:          'json',
-					afterTypeDelay:    100,
-					data:              {
-						action:        'wc_geolocation_based_products_search_products_ajax',
-						security:      wc_geolocation_based_products_local.ajaxProductSearchNonce
-					}
-				}, function( data ) {
-
-					var terms = {};
-
-					$.each( data, function ( i, val ) {
-						terms[i]  = val;
-					});
-
-					return terms;
-				}).next( '.chosen-container' ).eq( 0 ).css( 'width', '100%' );
-
-				$( this ).next( '.chosen-container' ).find( '.search-field input' ).css( 'width', 'auto' );
-			});
-			
-			// chosen product category
-			$( 'select.wc-geolocation-based-products-choose-product-categories' ).each( function() {
-				$( this ).chosen({
-					allow_single_deselect: 'true',
-					width: '100%'
-				});
+			// Remove any lingering tooltips
+			$( '#tiptip_holder' ).removeAttr( 'style' );
+			$( '#tiptip_arrow' ).removeAttr( 'style' );
+			$( '.woocommerce-help-tip' ).tipTip({
+				'attribute': 'data-tip',
+				'fadeIn': 50,
+				'fadeOut': 50,
+				'delay': 200
 			});
 		},
 
 		reInitRows: function() {
 			// re-init row positions
-			$( 'table.wc-geolocation-based-products-settings' ).find( 'tr.entry' ).each( function( row ) {
+			$( 'table.wc-glbp-settings' ).find( 'tr.entry' ).each( function( row ) {
 				// reinit row position country 
-				var rowPos = String( $( 'input.wc-geolocation-based-products-country', this ).prop( 'name' ) ),
+				var rowPos = String( $( 'input.wc-glbp-country', this ).prop( 'name' ) ),
 					replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'input.wc-geolocation-based-products-country', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-country', this ).prop( 'name', replacedName );
 
 				// reinit row position region
-				rowPos = String( $( 'input.wc-geolocation-based-products-region', this ).prop( 'name' ) );
+				rowPos = String( $( 'input.wc-glbp-region', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'input.wc-geolocation-based-products-region', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-region', this ).prop( 'name', replacedName );
 
 				// reinit row position city
-				rowPos = String( $( 'input.wc-geolocation-based-products-city', this ).prop( 'name' ) );
+				rowPos = String( $( 'input.wc-glbp-city', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'input.wc-geolocation-based-products-city', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-city', this ).prop( 'name', replacedName );
 
 				// reinit row position products
-				rowPos = String( $( 'select.wc-geolocation-based-products-choose-products', this ).prop( 'name' ) );
+				rowPos = String( $( 'input.wc-glbp-products', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'select.wc-geolocation-based-products-choose-products', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-products', this ).prop( 'name', replacedName );
 
 				// reinit row position product categories
-				rowPos = String( $( 'select.wc-geolocation-based-products-choose-product-categories', this ).prop( 'name' ) );
+				rowPos = String( $( 'select.wc-glbp-categories', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'select.wc-geolocation-based-products-choose-product-categories', this ).prop( 'name', replacedName );
+				$( 'select.wc-glbp-categories', this ).prop( 'name', replacedName );
 
 				// reinit row position test
-				rowPos = String( $( 'input.wc-geolocation-based-products-test', this ).prop( 'name' ) );
+				rowPos = String( $( 'input.wc-glbp-test', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'input.wc-geolocation-based-products-test', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-test', this ).prop( 'name', replacedName );
 			});
-
-			$.wc_geolocation_based_products_admin.runTipTip();
 		},
 
 		init: function() {
-			$.wc_geolocation_based_products_admin.runChosen();
-
 			// add row
-			$( 'table.wc-geolocation-based-products-settings' ).on( 'click', '.insert-row', function( e ) {
+			$( 'table.wc-glbp-settings' ).on( 'click', '.wc-glbp-insert-row', function( e ) {
 				e.preventDefault();
 
-				var table = $( this ).parents( 'table.wc-geolocation-based-products-settings' ),
-					clonedRow = table.find( 'tr.entry' ).eq( 0 ).clone();
+				var table = $( this ).parents( 'table.wc-glbp-settings' ),
+					row = '';
 
-				// remove chosen and reapply
-				clonedRow.find( 'select.wc-geolocation-based-products-choose-products' ).css( 'display', 'block' ).val( '' ).removeClass( 'chzn-done' ).next( '.chosen-container' ).remove();
+				row += '<tr class="entry">';
 
-				// remove chosen and reapply
-				clonedRow.find( 'select.wc-geolocation-based-products-choose-product-categories' ).css( 'display', 'block' ).val( '' ).removeClass( 'chzn-done' ).next( '.chosen-container' ).remove();
+				row += '<td class="wc-glbp-column-remove-row">';
+				row += '<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />';
+				row += '</td>';
 
-				// remove any checkmark
-				clonedRow.find( '.wc-geolocation-based-products-remove-row' ).prop( 'checked', false );
-				clonedRow.find( '.wc-geolocation-based-products-test' ).prop( 'checked', false );
+				row += '<td class="wc-glbp-column-country" width="5%">';
+				row += '<input type="text" name="row[0][country]" value="" placeholder="' + wc_geolocation_based_products_local.placeholderCountry + '" maxlength="2" class="wc-glbp-country" />';
+				row += '</td>';
 
-				// remove country field value
-				clonedRow.find( '.wc-geolocation-based-products-country' ).val( '' );
+				row += '<td class="wc-glbp-column-region" width="10%">';
+				row += '<input type="text" name="row[0][region]" value="" placeholder="' + wc_geolocation_based_products_local.placeholderRegion + '" class="wc-glbp-region" />';
+				row += '</td>';
 
-				// remove region field value
-				clonedRow.find( '.wc-geolocation-based-products-region' ).val( '' );
+				row += '<td class="wc-glbp-column-city" width="18%">';
+				row += '<input type="text" name="row[0][city]" value="" placeholder="' + wc_geolocation_based_products_local.placeholderCity + '" class="wc-glbp-city" />';
+				row += '</td>';
 
-				// remove city field value
-				clonedRow.find( '.wc-geolocation-based-products-city' ).val( '' );
+				row += '<td class="wc-glbp-column-product-categories" width="30%">';
+				row += '<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="' + wc_geolocation_based_products_local.placeholderSelectCategories + '" style="width: 50%;">';
+				row += '<option value=""></option>';
+				
+				var categories = $.parseJSON( wc_geolocation_based_products_local.categories );
+				
+				if ( categories.length ) {
+					$( categories ).each( function( index, element ) {
+						row += '<option value="' + element.term_id + '">' + element.name + '</option>';
+					});
+				}
+
+				row += '</select>';
+				row += '</td>';
+
+				row += '<td class="wc-glbp-column-products" width="30%">';
+				row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 50%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
+				row += '</td>';
+
+				row += '<td class="wc-glbp-column-test" width="2%">';
+				row += '<input type="checkbox" name="row[0][test]" value="" class="wc-glbp-test" />';
+				row += '</td>';
+				row += '</tr>';
 
 				// append row to table
-				table.find( 'tbody' ).append( clonedRow );
+				table.find( 'tbody' ).append( row );
 
-				// re-init chosen
-				$.wc_geolocation_based_products_admin.runChosen();
+				// re-init select2
+				$( document.body ).trigger( 'wc-enhanced-select-init' );
 
 				// re-init row positions
 				$.wc_geolocation_based_products_admin.reInitRows();
-
-				// resets the selected values
-				clonedRow.find( 'select.wc-geolocation-based-products-choose-product-categories option' ).prop( 'selected', false ).parents( 'select.wc-geolocation-based-products-choose-product-categories' ).trigger( 'chosen:updated' );
-
-				clonedRow.find( 'select.wc-geolocation-based-products-choose-products option' ).prop( 'selected', false ).parents( 'select.wc-geolocation-based-products-choose-products' ).trigger( 'chosen:updated' );
 			});
 
 			// remove row
-			$( 'table.wc-geolocation-based-products-settings' ).on( 'click', '.remove-row', function( e ) {
+			$( 'table.wc-glbp-settings' ).on( 'click', '.wc-glbp-remove-row', function( e ) {
 				e.preventDefault();
 
-				var table = $( this ).parents( 'table.wc-geolocation-based-products-settings' );
+				var table = $( this ).parents( 'table.wc-glbp-settings' );
 
-				table.find( '.wc-geolocation-based-products-remove-row:checked' ).each( function() {
+				table.find( '.wc-glbp-remove-row-cb:checked' ).each( function() {
 					// if last row, don't delete just remove options
 					if ( table.find( 'tr.entry' ).length === 1 ) {
 						// remove checkmark
-						table.find( '.wc-geolocation-based-products-remove-row' ).prop( 'checked', false );
-						table.find( '.wc-geolocation-based-products-test' ).prop( 'checked', false );
+						table.find( '.wc-glbp-remove-row-cb' ).prop( 'checked', false );
+						table.find( '.wc-glbp-test' ).prop( 'checked', false );
 
 						// remove country field value
-						table.find( '.wc-geolocation-based-products-country' ).val( '' );
+						table.find( '.wc-glbp-country' ).val( '' );
 
 						// remove region field value
-						table.find( '.wc-geolocation-based-products-region' ).val( '' );
+						table.find( '.wc-glbp-region' ).val( '' );
 
 						// remove city field value
-						table.find( '.wc-geolocation-based-products-city' ).val( '' );
+						table.find( '.wc-glbp-city' ).val( '' );
 
 						// reset select options
-						table.find( 'select.wc-geolocation-based-products-choose-products' ).val( '' ).trigger( 'chosen:updated' );
+						table.find( 'select.wc-product-search' ).select2( 'val', '' );
 
 						// reset select options
-						table.find( 'select.wc-geolocation-based-products-choose-product-categories' ).val( '' ).trigger( 'chosen:updated' );
+						table.find( 'select.wc-enhanced-select' ).select2( 'val', '' );
 					} else {
 						$( this ).parents( 'tr.entry' ).eq( 0 ).remove();
 					}
@@ -171,9 +153,9 @@ jQuery( document ).ready( function( $ ) {
 			});
 
 			// test checkbox toggles
-			$( 'table.wc-geolocation-based-products-settings' ).on( 'click', '.wc-geolocation-based-products-test', function() {
+			$( 'table.wc-glbp-settings' ).on( 'click', '.wc-glbp-test', function() {
 				// remove checkmark from all
-				$( this ).parents( 'table.wc-geolocation-based-products-settings' ).find( '.wc-geolocation-based-products-test' ).not( this ).prop( 'checked', false );
+				$( this ).parents( 'table.wc-glbp-settings' ).find( '.wc-glbp-test' ).not( this ).prop( 'checked', false );
 
 				return true;
 			});

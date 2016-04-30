@@ -45,13 +45,19 @@ class WC_Geolocation_Based_Products_Admin {
 	public function admin_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'ajax-chosen', 'chosen', 'jquery-tiptip' ), WC_GEOLOCATION_BASED_PRODUCTS_VERSION, true );
+		wp_register_script( 'geolocation_based_products_admin_script', plugins_url( 'plugin-assets/js/admin-settings' . $suffix . '.js' , dirname( __FILE__ ) ), array( 'jquery', 'select2', 'wc-enhanced-select', 'jquery-tiptip' ), WC_GEOLOCATION_BASED_PRODUCTS_VERSION, true );
 
 		wp_enqueue_script( 'geolocation_based_products_admin_script' );
 
+		$cats = $this->get_product_categories();
+
 		$localized_vars = array(
-			'ajaxURL'                   => admin_url( 'admin-ajax.php' ),
-			'ajaxProductSearchNonce'    => wp_create_nonce( '_wc_geolocation_based_products_search_products_nonce' )
+			'placeholderCountry'          => __( '2 Letter Country Code', 'woocommerce-geolocation-based-products' ),
+			'placeholderCity'             => __( 'City Name', 'woocommerce-geolocation-based-products' ),
+			'placeholderRegion'           => __( 'Region Code', 'woocommerce-geolocation-based-products' ),
+			'placeholderSelectCategories' => __( 'Select Product Categories', 'woocommerce-geolocation-based-products' ),
+			'placeholderSearchProducts'   => __( 'Search Products by Name', 'woocommerce-geolocation-based-products' ),
+			'categories'                  => json_encode( $cats )
 		);
 		
 		wp_localize_script( 'geolocation_based_products_admin_script', 'wc_geolocation_based_products_local', $localized_vars );
@@ -101,11 +107,11 @@ class WC_Geolocation_Based_Products_Admin {
 			foreach( $_POST['row'] as $row ) {
 	
 				// sanitize submited data
-				$countrys = isset( $row['countrys'] ) ? strtoupper( sanitize_text_field( $row['countrys'] ) ) : '';
+				$country = isset( $row['country'] ) ? strtoupper( sanitize_text_field( $row['country'] ) ) : '';
 
-				$regions = isset( $row['regions'] ) ? strtoupper( sanitize_text_field( $row['regions'] ) ) : '';
+				$region = isset( $row['region'] ) ? strtoupper( sanitize_text_field( $row['region'] ) ) : '';
 
-				$cities = isset( $row['cities'] ) ? strtoupper( sanitize_text_field( $row['cities'] ) ) : '';
+				$city = isset( $row['city'] ) ? strtoupper( sanitize_text_field( $row['city'] ) ) : '';
 
 				if ( isset( $row['product_categories'] ) ) {
 					$product_categories = is_array( $row['product_categories'] ) ? array_map( 'absint', $row['product_categories'] ) : absint( $row['	product_categories'] );
@@ -114,7 +120,7 @@ class WC_Geolocation_Based_Products_Admin {
 				}
 
 				if ( isset( $row['products'] ) ) {
-					$products = is_array( $row['products'] ) ? array_map( 'absint', $row['products'] ) : absint( $row['products'] );
+					$products = implode( ',', array_filter( array_map( 'intval', explode( ',', $row['products'] ) ) ) );
 				} else {
 					$products = array();
 				}
@@ -126,9 +132,9 @@ class WC_Geolocation_Based_Products_Admin {
 				}
 
 				$rows[] = array( 
-					'countrys'           => $countrys,
-					'regions'            => $regions,
-					'cities'             => $cities, 
+					'country'            => $country,
+					'region'             => $region,
+					'city'               => $city, 
 					'product_categories' => $product_categories, 
 					'products'           => $products,
 					'test'               => $test
@@ -156,46 +162,46 @@ class WC_Geolocation_Based_Products_Admin {
 
 		$cats = $this->get_product_categories();
 		?>
-		<table class="wc-geolocation-based-products-settings widefat">
+		<table class="wc-glbp-settings widefat">
 			<thead>
 				<tr>
-					<th><?php _e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
+					<th><?php esc_html_e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
 
-					<th width="5%"><?php _e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="5%"><?php esc_html_e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>
 						
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'A 2 letter country code, e.g. US.  This is required. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+						<?php echo wc_help_tip( __( 'A 2 letter country code, e.g. US.  This is required. Leave blank to disable.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="10%"><?php _e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'A region code for your state or province, e.g. CA for California. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+					<th width="10%"><?php esc_html_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>
+						<?php echo wc_help_tip( __( 'A region code for your state or province, e.g. CA for California. Leave blank to disable.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="18%"><?php _e( 'City', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="18%"><?php esc_html_e( 'City', 'woocommerce-geolocation-based-products' ); ?>
 
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'A city name. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+						<?php echo wc_help_tip( __( 'A city name. Leave blank to disable.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="30%"><?php _e( 'Product Categories to Hide', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="30%"><?php esc_html_e( 'Product Categories to Hide', 'woocommerce-geolocation-based-products' ); ?>
 
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'Product Categories to Hide.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+						<?php echo wc_help_tip( __( 'Product Categories to Hide.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="30%"><?php _e( 'Products to Hide', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="30%"><?php esc_html_e( 'Products to Hide', 'woocommerce-geolocation-based-products' ); ?>
 						
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'Search for the products in which you want to hide for this country.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+						<?php echo wc_help_tip( __( 'Search for the products in which you want to hide for this country.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="2%"><?php _e( 'Test Mode', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="2%"><?php esc_html_e( 'Test Mode', 'woocommerce-geolocation-based-products' ); ?>
 						
-						<img class="help_tip" data-tip="<?php esc_attr_e( 'Check the box to enable test mode for this rule. Leave blank to disable.', 'woocommerce-geolocation-based-products' ); ?>" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+						<?php echo wc_help_tip( __( 'Check the box to enable test mode for this rule. Leave blank to disable.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
 					<th colspan="10">
-						<a href="#" class="button plus insert-row"><?php _e( 'Insert row', 'woocommerce-geolocation-based-products' ); ?></a>
-						<a href="#" class="button minus remove-row"><?php _e( 'Remove selected row(s)', 'woocommerce-geolocation-based-products' ); ?></a>
+						<a href="#" class="button wc-glbp-insert-row"><?php esc_html_e( 'Insert row', 'woocommerce-geolocation-based-products' ); ?></a>
+						<a href="#" class="button wc-glbp-remove-row"><?php esc_html_e( 'Remove selected row(s)', 'woocommerce-geolocation-based-products' ); ?></a>
 					</th>
 				</tr>
 			</tfoot>
@@ -204,24 +210,24 @@ class WC_Geolocation_Based_Products_Admin {
 					if ( false === $rows ) {
 				?>
 						<tr class="entry">
-							<td>
-								<input type="checkbox" value="remove" class="wc-geolocation-based-products-remove-row" />
+							<td class="wc-glbp-column-remove-row">
+								<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />
 							</td>
 
-							<td class="country" width="5%">
-								<input type="text" name="row[0][countrys]" value="" placeholder="<?php esc_attr_e( '2 Letter Country Code', 'woocommerce-geolocation-based-products' ); ?>" maxlength="2" class="wc-geolocation-based-products-country" />
+							<td class="wc-glbp-column-country" width="5%">
+								<input type="text" name="row[0][country]" value="" placeholder="<?php esc_attr_e( '2 Letter Country Code', 'woocommerce-geolocation-based-products' ); ?>" maxlength="2" class="wc-glbp-country" />
 							</td>
 
-							<td class="region" width="10%">
-								<input type="text" name="row[0][regions]" value="" placeholder="<?php esc_attr_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>" class="wc-geolocation-based-products-region" />
+							<td class="wc-glbp-column-region" width="10%">
+								<input type="text" name="row[0][region]" value="" placeholder="<?php esc_attr_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>" class="wc-glbp-region" />
 							</td>
 
-							<td class="city" width="18%">
-								<input type="text" name="row[0][cities]" value="" placeholder="<?php esc_attr_e( 'City Name', 'woocommerce-geolocation-based-products' ); ?>" class="wc-geolocation-based-products-city" />
+							<td class="wc-glbp-column-city" width="18%">
+								<input type="text" name="row[0][city]" value="" placeholder="<?php esc_attr_e( 'City Name', 'woocommerce-geolocation-based-products' ); ?>" class="wc-glbp-city" />
 							</td>
 
-							<td class="product-categories" width="30%">
-								<select name="row[0][product_categories][]" class="wc-geolocation-based-products-choose-product-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>">
+							<td class="wc-glbp-column-product-categories" width="30%">
+								<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 50%;">
 									<option value=""></option>
 									<?php
 										if ( ! empty( $cats ) ) {
@@ -235,14 +241,12 @@ class WC_Geolocation_Based_Products_Admin {
 								</select>
 							</td>
 
-							<td class="products" width="30%">
-								<select name="row[0][products][]" class="wc-geolocation-based-products-choose-products" multiple="multiple" data-placeholder="<?php _e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>">
-									<option value=""></option>
-								</select>
+							<td class="wc-glbp-column-products" width="30%">
+								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 50%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
 							</td>
 
-							<td class="test" width="2%">
-								<input type="checkbox" name="row[0][test]" value="" class="wc-geolocation-based-products-test" />
+							<td class="wc-glbp-column-test" width="2%">
+								<input type="checkbox" name="row[0][test]" value="" class="wc-glbp-test" />
 							</td>
 						</tr>
 				<?php
@@ -251,33 +255,33 @@ class WC_Geolocation_Based_Products_Admin {
 
 						foreach ( $rows as $row ) {
 
-							$countrys = ( isset( $row['countrys'] ) && ! empty( $row['countrys'] ) ) ? $row['countrys'] : '';
+							$country = ( isset( $row['country'] ) && ! empty( $row['country'] ) ) ? $row['country'] : '';
 
-							$regions = ( isset( $row['regions'] ) && ! empty( $row['regions'] ) ) ? $row['regions'] : '';
+							$region = ( isset( $row['region'] ) && ! empty( $row['region'] ) ) ? $row['region'] : '';
 
-							$cities = ( isset( $row['cities'] ) && ! empty( $row['cities'] ) ) ? $row['cities'] : '';
+							$city = ( isset( $row['city'] ) && ! empty( $row['city'] ) ) ? $row['city'] : '';
 
 							$test = ( isset( $row['test'] ) && ! empty( $row['test'] ) ) ? $row['test'] : '';
 				?>
 							<tr class="entry">
-								<td>
-									<input type="checkbox" value="remove" class="wc-geolocation-based-products-remove-row" />
+								<td class="wc-glbp-column-remove-row">
+									<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />
 								</td>
 
-								<td class="country" width="5%">
-									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][countrys]" value="<?php echo esc_attr( $countrys ); ?>" placeholder="<?php esc_attr_e( '2 Letter Country Code', 'woocommerce-geolocation-based-products' ); ?>" maxlength="2" class="wc-geolocation-based-products-country" />
+								<td class="wc-glbp-column-country" width="5%">
+									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][country]" value="<?php echo esc_attr( $country ); ?>" placeholder="<?php esc_attr_e( '2 Letter Country Code', 'woocommerce-geolocation-based-products' ); ?>" maxlength="2" class="wc-glbp-country" />
 								</td>
 
-								<td class="region" width="10%">
-									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][regions]" value="<?php echo esc_attr( $regions ); ?>" placeholder="<?php esc_attr_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>" class="wc-geolocation-based-products-region" />
+								<td class="wc-glbp-column-region" width="10%">
+									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][region]" value="<?php echo esc_attr( $region ); ?>" placeholder="<?php esc_attr_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>" class="wc-glbp-region" />
 								</td>
 
-								<td class="city" width="18%">
-									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][cities]" value="<?php echo esc_attr( $cities ); ?>" placeholder="<?php esc_attr_e( 'City Name', 'woocommerce-geolocation-based-products' ); ?>" class="wc-geolocation-based-products-city" />
+								<td class="wc-glbp-column-city" width="18%">
+									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][city]" value="<?php echo esc_attr( $city ); ?>" placeholder="<?php esc_attr_e( 'City Name', 'woocommerce-geolocation-based-products' ); ?>" class="wc-glbp-city" />
 								</td>
 
-								<td class="product-categories" width="30%">
-									<select name="row[<?php echo esc_attr( $row_count ); ?>][product_categories][]" class="wc-geolocation-based-products-choose-product-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>">
+								<td class="wc-glbp-column-product-categories" width="30%">
+									<select name="row[<?php echo esc_attr( $row_count ); ?>][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 50%;">
 										<option value=""></option>
 										<?php
 											if ( ! empty( $cats ) ) {
@@ -292,28 +296,24 @@ class WC_Geolocation_Based_Products_Admin {
 									</select>
 								</td>
 
-								<td class="products" width="30%">
-									<select name="row[<?php echo esc_attr( $row_count ); ?>][products][]" class="wc-geolocation-based-products-choose-products" multiple="multiple" data-placeholder="<?php _e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>">
-										<option value=""></option>
-										<?php
-											if ( ! empty( $row['products'] ) ) {
+								<td class="wc-glbp-column-products" width="30%">
+									<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 50%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
+										$product_ids = array_filter( array_map( 'absint', explode( ',', $row['products'] ) ) );
+										$json_ids    = array();
 
-												foreach( $row['products'] as $product ) {
-													$name = get_post( $product );
-
-													if ( $name !== NULL ) {
-										?>
-														<option value="<?php echo esc_attr( $product ); ?>" selected="selected"><?php echo $name->post_title; ?></option>
-										<?php
-													}
-												}
+										foreach ( $product_ids as $product_id ) {
+											$product = wc_get_product( $product_id );
+											if ( is_object( $product ) ) {
+												$json_ids[ $product_id ] = wp_kses_post( $product->get_formatted_name() );
 											}
-										?>
-									</select>
+										}
+
+										echo esc_attr( json_encode( $json_ids ) );
+										?>" value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>" />
 								</td>
 
-								<td class="test" width="2%">
-									<input type="checkbox" name="row[<?php echo esc_attr( $row_count ); ?>][test]" value="true" class="wc-geolocation-based-products-test" <?php checked( 'true', $test ); ?> />
+								<td class="wc-glbp-column-test" width="2%">
+									<input type="checkbox" name="row[<?php echo esc_attr( $row_count ); ?>][test]" value="true" class="wc-glbp-test" <?php checked( 'true', $test ); ?> />
 								</td>
 							</tr>
 				<?php
@@ -371,107 +371,6 @@ class WC_Geolocation_Based_Products_Admin {
 	<?php
 
 		return true;		
-	}
-
-	/**
-	 * Search for products and echo json
-	 *
-	 * @param string $x (default: '')
-	 * @param string $post_types (default: array('product'))
-	 */
-	public function search_products( $x = '', $post_types = array( 'product' ) ) {
-		$nonce = $_GET['security'];
-
-		// bail if nonce don't check out
-		if ( ! wp_verify_nonce( $nonce, '_wc_geolocation_based_products_search_products_nonce' ) ) {
-		     die ( 'error' );	
-		 }
-
-		header( 'Content-Type: application/json; charset=utf-8' );
-
-		$term = (string) wc_clean( stripslashes( $_GET['term'] ) );
-
-		if ( empty( $term ) ) {
-			die();
-		}
-
-		if ( is_numeric( $term ) ) {
-
-			$args = array(
-				'post_type'      => $post_types,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'post__in'       => array(0, $term),
-				'fields'         => 'ids'
-			);
-
-			$args2 = array(
-				'post_type'      => $post_types,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'post_parent'    => $term,
-				'fields'         => 'ids'
-			);
-
-			$args3 = array(
-				'post_type'      => $post_types,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'meta_query'     => array(
-					array(
-						'key'     => '_sku',
-						'value'   => $term,
-						'compare' => 'LIKE'
-					)
-				),
-				'fields'         => 'ids'
-			);
-
-			$posts = array_unique( array_merge( get_posts( $args ), get_posts( $args2 ), get_posts( $args3 ) ) );
-
-		} else {
-
-			$args = array(
-				'post_type'      => $post_types,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				's'              => $term,
-				'fields'         => 'ids'
-			);
-
-			$args2 = array(
-				'post_type'      => $post_types,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'meta_query'     => array(
-					array(
-					'key'     => '_sku',
-					'value'   => $term,
-					'compare' => 'LIKE'
-					)
-				),
-				'fields'         => 'ids'
-			);
-
-			$posts = array_unique( array_merge( get_posts( $args ), get_posts( $args2 ) ) );
-
-		}
-
-		$found_products = array();
-
-		if ( $posts ) {
-			foreach ( $posts as $post ) {
-				$product = get_product( $post );
-
-				$found_products[ $post ] = $product->get_formatted_name();
-			}
-		}
-
-		$found_products = apply_filters( 'woocommerce_json_search_found_products', $found_products );
-
-		echo json_encode( $found_products );
-
-		die();
 	}
 }
 
