@@ -23,7 +23,7 @@ class ComposerAutoloaderInit24beccb9a4686f2fcd9e83e385862cf6
         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
         spl_autoload_unregister(array('ComposerAutoloaderInit24beccb9a4686f2fcd9e83e385862cf6', 'loadClassLoader'));
 
-        if (PHP_VERSION_ID >= 50600) {
+        if (false) {
             require_once __DIR__ . '/autoload_static.php';
 
             call_user_func(\Composer\Autoload\ComposerStaticInit24beccb9a4686f2fcd9e83e385862cf6::getInitializer($loader));
