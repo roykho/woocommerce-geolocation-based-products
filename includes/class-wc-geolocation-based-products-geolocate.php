@@ -21,16 +21,44 @@ class WC_Geolocation_Based_Products_Geolocate {
 	);
 
 	/**
-	 * Maybe trigger a DB update for the first time.
-	 * @param  string $new_value
-	 * @param  string $old_value
-	 * @return string
+	 * Constructor.
+	 *
+	 * @access public
+	 * @since 1.4.0
+	 * @version 1.4.0
+	 * @return bool
 	 */
-	public function maybe_update_database( $new_value, $old_value ) {
-		if ( $new_value !== $old_value && 'geolocation' === $new_value ) {
-			self::update_database();
+	public function __construct() {
+		add_filter( 'cron_schedules', array( $this, 'add_weekly_cron_schedule' ) );
+		add_action( 'wc_glbp_db_update', array( $this, 'update_database' ) );
+
+		if ( ! wp_next_scheduled( 'wc_glbp_db_update' ) ) {
+			wp_schedule_event( time(), 'weekly', 'wc_glbp_db_update' );
 		}
-		return $new_value;
+
+		if ( ! file_exists( self::get_local_city_database_path() ) ) {
+			$this->update_database();
+		}
+
+		return true;
+	}
+
+	/**
+	 * Adds custom weekly schedule to cron.
+	 *
+	 * @access public
+	 * @since 1.4.0
+	 * @version 1.4.0
+	 * @param array $schedules
+	 * @return array $schedules
+	 */
+	public function add_weekly_cron_schedule( $schedules ) {
+		$schedules['weekly'] = array(
+			'interval' => WEEK_IN_SECONDS,
+			'display'  => __( 'Once Weekly', 'woocommerce-geolocation-based-products' ),
+		);
+
+		return $schedules;
 	}
 
 	/**
@@ -95,11 +123,11 @@ class WC_Geolocation_Based_Products_Geolocate {
 			return $this->geolocate_ip( $this->get_external_ip_address(), false );
 		}
 
-		$city_record    = $city_reader->city( $ip_address );
-
-		$country        = sanitize_text_field( strtoupper( $city_record->country->isoCode ) );
-		$city           = sanitize_text_field( strtoupper( $city_record->city->name ) );
-		$region         = sanitize_text_field( strtoupper( $city_record->mostSpecificSubdivision->isoCode) );
+		$city_record = $city_reader->city( $ip_address );
+		
+		$country     = sanitize_text_field( strtoupper( $city_record->country->isoCode ) );
+		$city        = sanitize_text_field( strtoupper( $city_record->city->name ) );
+		$region      = sanitize_text_field( strtoupper( $city_record->mostSpecificSubdivision->isoCode) );
 
 		return array( 'country_code' => $country, 'city' => $city, 'region_code' => $region );
 	}
