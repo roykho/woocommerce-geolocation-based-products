@@ -7,7 +7,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	private static $_this;
 
 	public $location_data;
-	public $exclusion;
+	public $matches;
 	public $geolocate;
 
 	/**
@@ -23,7 +23,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		$this->geolocate     = $geolocate;
 		$this->location_data = $this->get_location_data();
-		$this->exclusion     = $this->get_exclusion();
+		$this->matches     = $this->get_matches();
 
 		add_action( 'pre_get_posts', array( $this, 'filter_query' ) );
 
@@ -102,14 +102,15 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
-	 * gets the excluded products and product categories
+	 * Gets the matched products and product categories based on rules
+	 * and current user location.
 	 *
 	 * @access public
 	 * @since 1.0.0
-	 * @return string $user_country
+	 * @return array $matches
 	 */
-	public function get_exclusion() {
-		$exclude = false;
+	public function get_matches() {
+		$match = false;
 
 		$product_cats = array();
 
@@ -120,11 +121,11 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( $rows !== false ) {
 			// loop through the rows and get data
 			foreach( $rows as $row ) {
-				$exclude = false;
+				$match = false;
 
 				// check if test is enabled
 				if ( isset( $row['test'] ) && $row['test'] === 'true' ) {
-					$exclude = true;
+					$match = true;
 
 				} else {
 					// check if country is set and matched
@@ -132,23 +133,23 @@ class WC_Geolocation_Based_Products_Frontend {
 						// if both region and city is set they both have to match
 						if ( $this->region_isset( $row['region'] ) && $this->city_isset( $row['city'] ) ) {
 							if ( $this->region_is_matched( $row['region'] ) && $this->city_is_matched( $row['city'] ) ) {
-								$exclude = true;
+								$match = true;
 							}
 						} elseif ( $this->region_isset( $row['region'] ) ) {
 							if ( $this->region_is_matched( $row['region'] ) ) {
-								$exclude = true;
+								$match = true;
 							}	
 						} elseif ( $this->city_isset( $row['city'] ) ) {
 							if ( $this->city_is_matched( $row['city'] ) ) {
-								$exclude = true;
+								$match = true;
 							}
 						}
 					} elseif ( $this->country_is_matched( $row['country'] ) ) {
-						$exclude = true;
+						$match = true;
 					}
 				}
 
-				if ( $exclude ) {
+				if ( $match ) {
 					$product_cats = $row['product_categories'];
 
 					$products = $row['products'];	
@@ -158,7 +159,7 @@ class WC_Geolocation_Based_Products_Frontend {
 			}
 		}
 
-		if ( $exclude ) {
+		if ( $match ) {
 			return array( 'product_cats' => $product_cats, 'products' => $products );
 		} else {
 			return false;
@@ -265,18 +266,18 @@ class WC_Geolocation_Based_Products_Frontend {
 			return;
 		}
 
-		if ( $this->exclusion ) {
+		if ( $this->matches ) {
 
 			$taxquery = array(
 				array(
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
-					'terms'    => $this->exclusion['product_cats'],
+					'terms'    => $this->matches['product_cats'],
 					'operator' => 'NOT IN'
 				) 
 			);
 			
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			$q->set( 'tax_query', $taxquery );
 
@@ -308,7 +309,7 @@ class WC_Geolocation_Based_Products_Frontend {
 				array(
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
-					'terms'    => $this->exclusion['product_cats'],
+					'terms'    => $this->matches['product_cats'],
 					'operator' => 'IN'
 				)
 			),
@@ -335,8 +336,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function hide_from_categories_view( $args ) {
-		if ( $this->exclusion ) {	
-			$args['exclude'] = implode( ',', $this->exclusion['product_cats'] );
+		if ( $this->matches ) {	
+			$args['exclude'] = implode( ',', $this->matches['product_cats'] );
 
 			// this is expensive allow user to not use as they can choose to hide product counts
 			apply_filters( 'woocommerce_geolocation_based_products_update_category_count', add_filter( 'get_terms', array( $this, 'update_category_count' ) ) );
@@ -355,12 +356,12 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function update_category_count( $terms ) {
 		$i = 0;
 
-		if ( $this->exclusion ) {
+		if ( $this->matches ) {
 			if ( ! is_object( $terms[0] ) ) {
 				return $terms;
 			}
 
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			foreach( $terms as $term_obj ) {
 				$args = array(
@@ -375,7 +376,7 @@ class WC_Geolocation_Based_Products_Frontend {
 						array(
 							'taxonomy' => 'product_cat',
 							'field'    => 'id',
-							'terms'    => $this->exclusion['product_cats'],
+							'terms'    => $this->matches['product_cats'],
 							'operator' => 'NOT IN'
 						)
 					),
@@ -406,8 +407,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $args
 	 */
 	public function hide_from_products_widget( $args ) {
-		if ( $this->exclusion ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			$args['post__not_in'] = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 		}
@@ -425,8 +426,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $args
 	 */
 	public function hide_related_products( $args ) {
-		if ( $this->exclusion ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -455,8 +456,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $ids
 	 */
 	public function hide_upsell_products( $ids ) {
-		if ( $this->exclusion ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -480,8 +481,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $ids
 	 */
 	public function hide_crosssell_products( $ids ) {
-		if ( $this->exclusion ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -505,12 +506,12 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return array $atts
 	 */
 	public function hide_products_from_menu( $items, $args ) {
-		if ( $this->exclusion ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->exclusion['products'] ) ) );
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
 
 			foreach( $items as $key => $item ) {
 				if ( in_array( (int) $item->object_id, $product_ids ) 
-					|| in_array( (int) $item->object_id, $this->exclusion['product_cats'] ) 
+					|| in_array( (int) $item->object_id, $this->matches['product_cats'] ) 
 					|| in_array( (int) $item->object_id, $this->get_product_ids_from_excluded_cats() )
 				) {
 					unset( $items[ $key ] );
