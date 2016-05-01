@@ -170,12 +170,12 @@ class WC_Geolocation_Based_Products_Admin {
 					<th><?php echo wc_help_tip( __( 'Sort Rules. You can drag and drop the rules. Rules towards the bottom will supercede rules above.', 'woocommerce-geolocation-based-products' ) ); ?></th>
 					<th><?php esc_html_e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
 
-					<th width="5%"><?php esc_html_e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="5%"><?php esc_html_e( 'ISO Country Code', 'woocommerce-geolocation-based-products' ); ?>
 						
 						<?php echo wc_help_tip( __( 'A 2 letter ISO country code, e.g. US. Leaving blank matches all countries.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
-					<th width="10%"><?php esc_html_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>
+					<th width="10%"><?php esc_html_e( 'ISO Region Code', 'woocommerce-geolocation-based-products' ); ?>
 						<?php echo wc_help_tip( __( 'A ISO region code for your state or province, e.g. CA for California. Leaving blank matches all regions.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
