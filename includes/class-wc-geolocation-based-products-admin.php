@@ -97,7 +97,7 @@ class WC_Geolocation_Based_Products_Admin {
 		if ( isset( $_POST ) && ! empty( $_POST['wc_geolocation_based_products_save_admin_settings_nonce'] ) && ! empty( $_POST['row'] ) ) {
 			// bail if security fails
 			if ( false === wp_verify_nonce( $_POST['wc_geolocation_based_products_save_admin_settings_nonce'], 'wc_geolocation_based_products_save_admin_settings' ) ) {
-				die( 'error' );
+				wp_die( __( 'Cheatin&#8217; huh?', 'woocommerce-geolocation-based-products' ) );
 			}
 
 			$rows = array();
@@ -167,16 +167,16 @@ class WC_Geolocation_Based_Products_Admin {
 		<table class="wc-glbp-settings widefat">
 			<thead>
 				<tr>
-					<th><?php echo wc_help_tip( __( 'Sort Rules. Rules towards the bottom will supercede rules above.', 'woocommerce-geolocation-based-products' ) ); ?></th>
+					<th><?php echo wc_help_tip( __( 'Sort Rules. You can drag and drop the rules. Rules towards the bottom will supercede rules above.', 'woocommerce-geolocation-based-products' ) ); ?></th>
 					<th><?php esc_html_e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
 
 					<th width="5%"><?php esc_html_e( 'Country Code', 'woocommerce-geolocation-based-products' ); ?>
 						
-						<?php echo wc_help_tip( __( 'A 2 letter country code, e.g. US. Leaving blank matches all countries.', 'woocommerce-geolocation-based-products' ) ); ?>
+						<?php echo wc_help_tip( __( 'A 2 letter ISO country code, e.g. US. Leaving blank matches all countries.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
 					<th width="10%"><?php esc_html_e( 'Region Code', 'woocommerce-geolocation-based-products' ); ?>
-						<?php echo wc_help_tip( __( 'A iso region code for your state or province, e.g. CA for California. Leaving blank matches all regions.', 'woocommerce-geolocation-based-products' ) ); ?>
+						<?php echo wc_help_tip( __( 'A ISO region code for your state or province, e.g. CA for California. Leaving blank matches all regions.', 'woocommerce-geolocation-based-products' ) ); ?>
 					</th>
 
 					<th width="18%"><?php esc_html_e( 'City', 'woocommerce-geolocation-based-products' ); ?>
