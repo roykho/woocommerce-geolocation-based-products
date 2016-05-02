@@ -120,6 +120,11 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( $rows !== false ) {
 			// loop through the rows and get data
 			foreach( $rows as $row ) {
+				// if disabled, skip
+				if ( isset( $row['disable'] ) && 'yes' === $row['disable'] ) {
+					continue;
+				}
+
 				// check if test is enabled
 				if ( isset( $row['test'] ) && 'true' === $row['test'] ) {
 					if ( 'show' === $row['show_hide'] ) {

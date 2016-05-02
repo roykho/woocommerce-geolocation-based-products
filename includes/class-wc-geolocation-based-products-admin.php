@@ -104,7 +104,12 @@ class WC_Geolocation_Based_Products_Admin {
 
 			// loop through the rows
 			foreach( $_POST['row'] as $row ) {
-	
+				if ( isset( $row['disable'] ) ) {
+					$disable = 'yes';
+				} else {
+					$disable = 'no';
+				}
+
 				// sanitize submited data
 				$country = isset( $row['country'] ) ? strtoupper( sanitize_text_field( $row['country'] ) ) : '';
 
@@ -127,12 +132,13 @@ class WC_Geolocation_Based_Products_Admin {
 				}
 
 				if ( isset( $row['test'] ) ) {
-					$test = is_array( $row['test'] ) ? array_map( 'sanitize_text_field', $row['test'] ) : sanitize_text_field( $row['test'] );
+					$test = 'yes';
 				} else {
-					$test = array();
+					$test = 'no';
 				}
 
-				$rows[] = array( 
+				$rows[] = array(
+					'disable'            => $disable,
 					'country'            => $country,
 					'region'             => $region,
 					'city'               => $city, 
@@ -169,6 +175,11 @@ class WC_Geolocation_Based_Products_Admin {
 				<tr>
 					<th><?php echo wc_help_tip( __( 'Sort Rules. You can drag and drop the rules. Rules towards the bottom will supercede rules above.', 'woocommerce-geolocation-based-products' ) ); ?></th>
 					<th><?php esc_html_e( 'Remove', 'woocommerce-geolocation-based-products' ); ?></th>
+
+					<th width="10%"><?php esc_html_e( 'Disable', 'woocommerce-geolocation-based-products' ); ?>
+
+						<?php echo wc_help_tip( __( 'Check the box if you want to disable this rule.', 'woocommerce-geolocation-based-products' ) ); ?>
+					</th>
 
 					<th width="5%"><?php esc_html_e( 'ISO Country Code', 'woocommerce-geolocation-based-products' ); ?>
 						
@@ -220,19 +231,23 @@ class WC_Geolocation_Based_Products_Admin {
 								<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />
 							</td>
 
-							<td class="wc-glbp-column-country" width="5%">
+							<td class="wc-glbp-column-disable">
+								<input type="checkbox" value="row[0][disable]" class="wc-glbp-disable" />
+							</td>
+
+							<td class="wc-glbp-column-country">
 								<input type="text" name="row[0][country]" value="" placeholder="*" maxlength="2" class="wc-glbp-country" />
 							</td>
 
-							<td class="wc-glbp-column-region" width="10%">
+							<td class="wc-glbp-column-region">
 								<input type="text" name="row[0][region]" value="" placeholder="*" class="wc-glbp-region" />
 							</td>
 
-							<td class="wc-glbp-column-city" width="18%">
+							<td class="wc-glbp-column-city">
 								<input type="text" name="row[0][city]" value="" placeholder="*" class="wc-glbp-city" />
 							</td>
 
-							<td class="wc-glbp-column-product-categories" width="20%">
+							<td class="wc-glbp-column-product-categories">
 								<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 70%;">
 									<option value=""></option>
 									<?php
@@ -247,18 +262,18 @@ class WC_Geolocation_Based_Products_Admin {
 								</select>
 							</td>
 
-							<td class="wc-glbp-column-products" width="20%">
+							<td class="wc-glbp-column-products">
 								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
 							</td>
 
-							<td class="wc-glbp-column-show-hide" width="20%">
+							<td class="wc-glbp-column-show-hide">
 								<select name="row[0][show_hide]" class="wc-glbp-show-hide">
 									<option value="hide"><?php esc_html_e( 'Hide', 'woocommerce-geolocation-based-products' ); ?></option>
 									<option value="show"><?php esc_html_e( 'Show', 'woocommerce-geolocation-based-products' ); ?></option>
 								</select>
 							</td>
 
-							<td class="wc-glbp-column-test" width="2%">
+							<td class="wc-glbp-column-test">
 								<input type="checkbox" name="row[0][test]" value="" class="wc-glbp-test" />
 							</td>
 						</tr>
@@ -267,6 +282,8 @@ class WC_Geolocation_Based_Products_Admin {
 						$row_count = 0;
 
 						foreach ( $rows as $row ) {
+
+							$disable   = ( isset( $row['disable'] ) && ! empty( $row['disable'] ) ) ? $row['disable'] : '';
 
 							$country   = ( isset( $row['country'] ) && ! empty( $row['country'] ) ) ? $row['country'] : '';
 							
@@ -284,19 +301,23 @@ class WC_Geolocation_Based_Products_Admin {
 									<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />
 								</td>
 
-								<td class="wc-glbp-column-country" width="5%">
+								<td class="wc-glbp-column-disable">
+									<input type="checkbox" name="row[<?php echo esc_attr( $row_count ); ?>][disable]" class="wc-glbp-disable" <?php checked( 'yes', $disable ); ?> />
+								</td>
+
+								<td class="wc-glbp-column-country">
 									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][country]" value="<?php echo esc_attr( $country ); ?>" placeholder="*" maxlength="2" class="wc-glbp-country" />
 								</td>
 
-								<td class="wc-glbp-column-region" width="10%">
+								<td class="wc-glbp-column-region">
 									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][region]" value="<?php echo esc_attr( $region ); ?>" placeholder="*" class="wc-glbp-region" />
 								</td>
 
-								<td class="wc-glbp-column-city" width="18%">
+								<td class="wc-glbp-column-city">
 									<input type="text" name="row[<?php echo esc_attr( $row_count ); ?>][city]" value="<?php echo esc_attr( $city ); ?>" placeholder="*" class="wc-glbp-city" />
 								</td>
 
-								<td class="wc-glbp-column-product-categories" width="30%">
+								<td class="wc-glbp-column-product-categories">
 									<select name="row[<?php echo esc_attr( $row_count ); ?>][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 70%;">
 										<option value=""></option>
 										<?php
@@ -312,7 +333,7 @@ class WC_Geolocation_Based_Products_Admin {
 									</select>
 								</td>
 
-								<td class="wc-glbp-column-products" width="30%">
+								<td class="wc-glbp-column-products">
 									<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
 										$product_ids = array_filter( array_map( 'absint', $row['products'] ) );
 										$json_ids    = array();
@@ -328,15 +349,15 @@ class WC_Geolocation_Based_Products_Admin {
 										?>" value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>" />
 								</td>
 
-								<td class="wc-glbp-column-show-hide" width="20%">
+								<td class="wc-glbp-column-show-hide">
 									<select name="row[<?php echo esc_attr( $row_count ); ?>][show_hide]" class="wc-glbp-show-hide">
 										<option value="hide" <?php selected( $show_hide, 'hide' ); ?>><?php esc_html_e( 'Hide', 'woocommerce-geolocation-based-products' ); ?></option>
 										<option value="show" <?php selected( $show_hide, 'show' ); ?>><?php esc_html_e( 'Show', 'woocommerce-geolocation-based-products' ); ?></option>
 									</select>
 								</td>
 
-								<td class="wc-glbp-column-test" width="2%">
-									<input type="checkbox" name="row[<?php echo esc_attr( $row_count ); ?>][test]" value="true" class="wc-glbp-test" <?php checked( 'true', $test ); ?> />
+								<td class="wc-glbp-column-test">
+									<input type="checkbox" name="row[<?php echo esc_attr( $row_count ); ?>][test]" class="wc-glbp-test" <?php checked( 'yes', $test ); ?> />
 								</td>
 							</tr>
 				<?php

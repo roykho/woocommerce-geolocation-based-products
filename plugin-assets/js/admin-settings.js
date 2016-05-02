@@ -18,6 +18,13 @@ jQuery( document ).ready( function( $ ) {
 		reInitRows: function() {
 			// re-init row positions
 			$( 'table.wc-glbp-settings' ).find( 'tr.entry' ).each( function( row ) {
+
+				// reinit row position disable
+				rowPos = String( $( 'input.wc-glbp-disable', this ).prop( 'name' ) );
+				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
+
+				$( 'input.wc-glbp-disable', this ).prop( 'name', replacedName );
+
 				// reinit row position country 
 				var rowPos = String( $( 'input.wc-glbp-country', this ).prop( 'name' ) ),
 					replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
@@ -84,23 +91,28 @@ jQuery( document ).ready( function( $ ) {
 
 				row += '<tr class="entry">';
 				row += '<td class="wc-glbp-sort"></td>';
+
 				row += '<td class="wc-glbp-column-remove-row">';
 				row += '<input type="checkbox" value="remove" class="wc-glbp-remove-row-cb" />';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-country" width="5%">';
+				row += '<td class="wc-glbp-column-disable">';
+				row += '<input type="checkbox" name="row[0][disable]" class="wc-glbp-disable" />';
+				row += '</td>';
+
+				row += '<td class="wc-glbp-column-country">';
 				row += '<input type="text" name="row[0][country]" value="" placeholder="*" maxlength="2" class="wc-glbp-country" />';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-region" width="10%">';
+				row += '<td class="wc-glbp-column-region">';
 				row += '<input type="text" name="row[0][region]" value="" placeholder="*" class="wc-glbp-region" />';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-city" width="18%">';
+				row += '<td class="wc-glbp-column-city">';
 				row += '<input type="text" name="row[0][city]" value="" placeholder="*" class="wc-glbp-city" />';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-product-categories" width="20%">';
+				row += '<td class="wc-glbp-column-product-categories">';
 				row += '<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="' + wc_geolocation_based_products_local.placeholderSelectCategories + '" style="width: 70%;">';
 				row += '<option value=""></option>';
 				
@@ -115,19 +127,19 @@ jQuery( document ).ready( function( $ ) {
 				row += '</select>';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-products" width="20%">';
+				row += '<td class="wc-glbp-column-products">';
 				row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-show-hide" width="20%">';
+				row += '<td class="wc-glbp-column-show-hide">';
 				row += '<select name="row[0][show_hide]" class="wc-glbp-show-hide">';
 				row += '<option value="hide">' + wc_geolocation_based_products_local.optionHide + '</option>';
 				row += '<option value="show">' + wc_geolocation_based_products_local.optionShow + '</option>';
 				row += '</select>';
 				row += '</td>';
 
-				row += '<td class="wc-glbp-column-test" width="2%">';
-				row += '<input type="checkbox" name="row[0][test]" value="" class="wc-glbp-test" />';
+				row += '<td class="wc-glbp-column-test">';
+				row += '<input type="checkbox" name="row[0][test]" class="wc-glbp-test" />';
 				row += '</td>';
 				row += '</tr>';
 
@@ -153,6 +165,7 @@ jQuery( document ).ready( function( $ ) {
 						// remove checkmark
 						table.find( '.wc-glbp-remove-row-cb' ).prop( 'checked', false );
 						table.find( '.wc-glbp-test' ).prop( 'checked', false );
+						table.find( '.wc-glbp-disable' ).prop( 'checked', false );
 
 						// remove country field value
 						table.find( '.wc-glbp-country' ).val( '' );

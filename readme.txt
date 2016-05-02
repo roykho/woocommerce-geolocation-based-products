@@ -57,6 +57,9 @@ This plugin utilizes the IP address of the visitor to obtain location informatio
 = 1.4.2 =
 * Update - Missing Vendor folder when uploading to repo
 
+= 1.4.1 =
+* Update - Missing Vendor folder when uploading to repo
+
 = 1.4.0 =
 * Update - Removed freegeoip infavor of MaxMind GeoIP
 * Update - Removed Chosen for Select2
