@@ -101,7 +101,7 @@ jQuery( document ).ready( function( $ ) {
 				row += '</td>';
 
 				row += '<td class="wc-glbp-column-product-categories" width="20%">';
-				row += '<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="' + wc_geolocation_based_products_local.placeholderSelectCategories + '" style="width: 50%;">';
+				row += '<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="' + wc_geolocation_based_products_local.placeholderSelectCategories + '" style="width: 70%;">';
 				row += '<option value=""></option>';
 				
 				var categories = $.parseJSON( wc_geolocation_based_products_local.categories );
@@ -116,7 +116,7 @@ jQuery( document ).ready( function( $ ) {
 				row += '</td>';
 
 				row += '<td class="wc-glbp-column-products" width="20%">';
-				row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 50%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
+				row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
 				row += '</td>';
 
 				row += '<td class="wc-glbp-column-show-hide" width="20%">';

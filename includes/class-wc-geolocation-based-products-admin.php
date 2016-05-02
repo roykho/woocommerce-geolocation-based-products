@@ -233,7 +233,7 @@ class WC_Geolocation_Based_Products_Admin {
 							</td>
 
 							<td class="wc-glbp-column-product-categories" width="20%">
-								<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 50%;">
+								<select name="row[0][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 70%;">
 									<option value=""></option>
 									<?php
 										if ( ! empty( $cats ) ) {
@@ -248,7 +248,7 @@ class WC_Geolocation_Based_Products_Admin {
 							</td>
 
 							<td class="wc-glbp-column-products" width="20%">
-								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 50%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
+								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
 							</td>
 
 							<td class="wc-glbp-column-show-hide" width="20%">
@@ -297,7 +297,7 @@ class WC_Geolocation_Based_Products_Admin {
 								</td>
 
 								<td class="wc-glbp-column-product-categories" width="30%">
-									<select name="row[<?php echo esc_attr( $row_count ); ?>][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 50%;">
+									<select name="row[<?php echo esc_attr( $row_count ); ?>][product_categories][]" class="wc-enhanced-select wc-glbp-categories" multiple="multiple" data-placeholder="<?php _e( 'Select Product Categories', 'woocommerce-geolocation-based-products' ); ?>" style="width: 70%;">
 										<option value=""></option>
 										<?php
 											if ( ! empty( $cats ) ) {
@@ -313,7 +313,7 @@ class WC_Geolocation_Based_Products_Admin {
 								</td>
 
 								<td class="wc-glbp-column-products" width="30%">
-									<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 50%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
+									<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
 										$product_ids = array_filter( array_map( 'absint', explode( ',', $row['products'] ) ) );
 										$json_ids    = array();
 
