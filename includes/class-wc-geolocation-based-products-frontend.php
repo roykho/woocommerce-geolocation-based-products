@@ -23,7 +23,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		$this->geolocate     = $geolocate;
 		$this->location_data = $this->get_location_data();
-		$this->matches     = $this->get_matches();
+		$this->matches       = $this->get_matches();
 
 		add_action( 'pre_get_posts', array( $this, 'filter_query' ) );
 
@@ -107,11 +107,10 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.0.0
+	 * @version 1.5.0
 	 * @return array $matches
 	 */
 	public function get_matches() {
-		$match = false;
-
 		$product_cats = array();
 
 		$products = array();
@@ -121,49 +120,90 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( $rows !== false ) {
 			// loop through the rows and get data
 			foreach( $rows as $row ) {
-				$match = false;
-
 				// check if test is enabled
-				if ( isset( $row['test'] ) && $row['test'] === 'true' ) {
-					$match = true;
-
-				} else {
-					// check if country is set and matched
-					if ( $this->country_is_matched( $row['country'] ) && ( $this->region_isset( $row['region'] ) || $this->city_isset( $row['city'] ) ) ) {
-						// if both region and city is set they both have to match
-						if ( $this->region_isset( $row['region'] ) && $this->city_isset( $row['city'] ) ) {
-							if ( $this->region_is_matched( $row['region'] ) && $this->city_is_matched( $row['city'] ) ) {
-								$match = true;
-							}
-						} elseif ( $this->region_isset( $row['region'] ) ) {
-							if ( $this->region_is_matched( $row['region'] ) ) {
-								$match = true;
-							}	
-						} elseif ( $this->city_isset( $row['city'] ) ) {
-							if ( $this->city_is_matched( $row['city'] ) ) {
-								$match = true;
+				if ( isset( $row['test'] ) && 'true' === $row['test'] ) {
+					if ( 'show' === $row['show_hide'] ) {
+						foreach( $row['product_categories'] as $cat ) {
+							if ( ( $key = array_search( $cat, $product_cats ) ) !== false ) {
+								unset( $product_cats[ $key ] );
 							}
 						}
-					} elseif ( $this->country_is_matched( $row['country'] ) ) {
-						$match = true;
+
+						foreach( $row['products'] as $product ) {
+							if ( ( $key = array_search( $product, $products ) ) !== false ) {
+								unset( $products[ $key ] );
+							}
+						}
+					} elseif ( 'hide' === $row['show_hide'] ) {
+						foreach( $row['product_categories'] as $cat ) {
+							$product_cats[] = $cat;
+						}
+
+						foreach( $row['products'] as $product ) {
+							$products[] = $product;
+						}
 					}
-				}
 
-				if ( $match ) {
-					$product_cats = $row['product_categories'];
+					break;
+				} else {
+					if ( 'show' === $row['show_hide'] ) {
+						// remove product and categories from exclusion
+						if ( $this->location_matched( $row['country'], $row['region'], $row['city'] ) ) {
+							foreach( $row['product_categories'] as $cat ) {
+								if ( ( $key = array_search( $cat, $product_cats ) ) !== false ) {
+									unset( $product_cats[ $key ] );
+								}
+							}
 
-					$products = $row['products'];	
+							foreach( $row['products'] as $product ) {
+								if ( ( $key = array_search( $product, $products ) ) !== false ) {
+									unset( $products[ $key ] );
+								}
+							}
+						} else {
+							foreach( $row['product_categories'] as $cat ) {
+								$product_cats[] = $cat;
+							}
 
-					break; // after a match no need to look at the rest				
+							foreach( $row['products'] as $product ) {
+								$products[] = $product;
+							}
+						}
+					} elseif ( 'hide' === $row['show_hide'] && $this->location_matched( $row['country'], $row['region'], $row['city'] ) ) {
+						foreach( $row['product_categories'] as $cat ) {
+							$product_cats[] = $cat;
+						}
+
+						foreach( $row['products'] as $product ) {
+							$products[] = $product;
+						}
+					}
 				}
 			}
 		}
+		
+		array_unique( $product_cats );
+		array_unique( $products );
 
-		if ( $match ) {
-			return array( 'product_cats' => $product_cats, 'products' => $products );
-		} else {
-			return false;
+		return array( 'product_cats' => $product_cats, 'products' => $products );
+	}
+
+	/**
+	 * Check if any part of the location is matched
+	 *
+	 * @since 1.5.0
+	 * @version 1.5.0
+	 * @param string $country
+	 * @param string $region
+	 * @param string city
+	 * @return bool
+	 */
+	public function location_matched( $country, $region, $city ) {
+		if ( $this->country_is_matched( $country ) && $this->region_is_matched( $region ) && $this->city_is_matched( $city ) ) {
+			return true;
 		}
+
+		return false;	
 	}
 
 	/**
@@ -177,7 +217,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function country_is_matched( $saved_country = null ) {
 		$user_country = $this->get_user_country();
 
-		if ( ! empty( $saved_country ) && strtolower( $saved_country ) === strtolower( $user_country ) ) {
+		if ( empty( $saved_country ) || strtolower( $saved_country ) === strtolower( $user_country ) ) {
 			return true;
 		}
 		
@@ -195,23 +235,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function region_is_matched( $saved_region = null ) {
 		$user_region = $this->get_user_region();
 
-		if ( ! empty( $saved_region ) && strtolower( $saved_region ) === strtolower( $user_region ) ) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Checks if region isset
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param string $saved_region | saved region setting to match
-	 * @return bool
-	 */
-	public function region_isset( $saved_region = null ) {
-		if ( ! empty( $saved_region ) ) {
+		if ( empty( $saved_region ) || strtolower( $saved_region ) === strtolower( $user_region ) ) {
 			return true;
 		}
 		
@@ -229,23 +253,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	public function city_is_matched( $saved_city = null ) {
 		$user_city = $this->get_user_city();
 
-		if ( ! empty( $saved_city ) && strtolower( $saved_city ) === strtolower( $user_city ) ) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Checks if city isset
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param string $saved_city | saved city setting to match
-	 * @return bool
-	 */
-	public function city_isset( $saved_city = null ) {
-		if ( ! empty( $saved_city ) ) {
+		if ( empty( $saved_city ) || strtolower( $saved_city ) === strtolower( $user_city ) ) {
 			return true;
 		}
 		
@@ -261,7 +269,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function filter_query( $q ) {
-		// if it is not main query or not a shop page or is admin bail
+		// if it is not main query or is admin bail
 		if ( ! $q->is_main_query() || is_admin() ) { 
 			return;
 		}
@@ -277,7 +285,7 @@ class WC_Geolocation_Based_Products_Frontend {
 				) 
 			);
 			
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$q->set( 'tax_query', $taxquery );
 
@@ -361,7 +369,7 @@ class WC_Geolocation_Based_Products_Frontend {
 				return $terms;
 			}
 
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			foreach( $terms as $term_obj ) {
 				$args = array(
@@ -408,7 +416,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_from_products_widget( $args ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$args['post__not_in'] = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 		}
@@ -427,7 +435,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_related_products( $args ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -457,7 +465,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_upsell_products( $ids ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -482,7 +490,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_crosssell_products( $ids ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
@@ -507,7 +515,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function hide_products_from_menu( $items, $args ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', explode( ',', $this->matches['products'] ) ) );
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			foreach( $items as $key => $item ) {
 				if ( in_array( (int) $item->object_id, $product_ids ) 

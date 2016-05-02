@@ -121,7 +121,7 @@ class WC_Geolocation_Based_Products_Admin {
 				}
 
 				if ( isset( $row['products'] ) ) {
-					$products = implode( ',', array_filter( array_map( 'intval', explode( ',', $row['products'] ) ) ) );
+					$products = array_filter( array_map( 'intval', explode( ',', $row['products'] ) ) );
 				} else {
 					$products = array();
 				}
@@ -314,7 +314,7 @@ class WC_Geolocation_Based_Products_Admin {
 
 								<td class="wc-glbp-column-products" width="30%">
 									<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
-										$product_ids = array_filter( array_map( 'absint', explode( ',', $row['products'] ) ) );
+										$product_ids = array_filter( array_map( 'absint', $row['products'] ) );
 										$json_ids    = array();
 
 										foreach ( $product_ids as $product_id ) {
