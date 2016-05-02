@@ -21,6 +21,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_Geolocation_Based_Products' ) ) :
 
+register_activation_hook( __FILE__, 'wc_glbp_activation' );
+
+/**
+ * Activation tasks
+ *
+ * @since 1.5.0
+ * @version 1.5.0
+ * @return bool
+ */
+function wc_glbp_activation() {
+	// less than version 1.5.0
+	if ( ! get_option( 'wc_glbp_version' ) ) {
+		delete_option( 'wc_geolocation_based_products_settings' );
+
+		add_option( 'wc_glbp_version', '1.5.0', '', 'no' );
+	}
+
+	return true;
+}
+
 /**
  * main class.
  *

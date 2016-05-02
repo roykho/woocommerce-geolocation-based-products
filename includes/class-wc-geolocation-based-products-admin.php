@@ -150,7 +150,7 @@ class WC_Geolocation_Based_Products_Admin {
 			}
 
 			// update options
-			update_option( 'wc_geolocation_based_products_settings', $rows );
+			update_option( 'wc_geolocation_based_products_rules', $rows );
 		}
 
 		return true;
@@ -166,7 +166,7 @@ class WC_Geolocation_Based_Products_Admin {
 	public function admin_settings_field() {
 		do_action( 'wc_geolocation_based_products_admin_save' );
 
-		$rows = get_option( 'wc_geolocation_based_products_settings', false );
+		$rows = get_option( 'wc_geolocation_based_products_rules', false );
 
 		$cats = $this->get_product_categories();
 		?>

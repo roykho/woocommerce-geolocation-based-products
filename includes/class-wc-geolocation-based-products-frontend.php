@@ -115,7 +115,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		$products = array();
 
-		$rows = get_option( 'wc_geolocation_based_products_settings', false );
+		$rows = get_option( 'wc_geolocation_based_products_rules', false );
 
 		if ( $rows !== false ) {
 			// loop through the rows and get data

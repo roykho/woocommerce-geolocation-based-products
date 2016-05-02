@@ -9,5 +9,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 delete_option( 'wc_geolocation_based_products_settings' );
+delete_option( 'wc_geolocation_based_products_rules' );
+delete_option( 'wc_glbp_version' );
 delete_option( 'wc_geolocation_based_products_test_country' );
 wp_clear_scheduled_hook( 'wc_glbp_db_update' );

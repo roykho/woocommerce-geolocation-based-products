@@ -50,6 +50,8 @@ Rules that are towards the bottom will supercede the rules above it. You can dra
 
 You can test each individual rule by checking the "test" checkbox. This will simulate your current location to match what is set for that rule.
 
+This plugin utilizes the MaxMind GeoIP API and thus will store a copy of the database on your site. This makes for a better experience for users. The API will download the database once a week to refresh any updated geolocation data.
+
 == Frequently Asked Questions ==
 
 = This plugin does not seem to working =
@@ -71,7 +73,7 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 == Upgrade Notice ==
 
 = 1.5.0 =
-* Add - Ability to show and hide products and categories by location. Since this is a major update, please empty out all rules and reapply.
+* Add - Ability to show and hide products and categories by location. Since this is a major update, rules will be emptied. Please reapply all rules.
 
 == Changelog ==
 
