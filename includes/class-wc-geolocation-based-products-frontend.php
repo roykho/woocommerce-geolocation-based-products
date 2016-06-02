@@ -49,6 +49,9 @@ class WC_Geolocation_Based_Products_Frontend {
 		// hide products from menu
 		add_filter( 'wp_nav_menu_objects', array( $this, 'hide_products_from_menu' ), 10, 2 );
 
+		// hide products from shortcodes
+		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'hide_shortcode_products' ) );
+
 		return true;
 	}
 
@@ -56,6 +59,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * public access to instance object
 	 *
 	 * @since 1.1.1
+	 * @version 1.1.1
 	 * @return bool
 	 */
 	public function get_instance() {
@@ -67,6 +71,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.0.0
+	 * @version 1.0.0
 	 * @return string $user_country
 	 */
 	public function get_user_country() {
@@ -80,6 +85,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.0
+	 * @version 1.1.0
 	 * @return string $user_region
 	 */
 	public function get_user_region() {
@@ -93,6 +99,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.0
+	 * @version 1.1.0
 	 * @return string $user_city
 	 */
 	public function get_user_city() {
@@ -216,6 +223,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.0
+	 * @version 1.1.0
 	 * @param string $saved_country | saved country setting to match
 	 * @return bool
 	 */
@@ -234,6 +242,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.0
+	 * @version 1.1.0
 	 * @param string $saved_region | saved region setting to match
 	 * @return bool
 	 */
@@ -270,6 +279,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.0.0
+	 * @version 1.0.0
 	 * @param object $q | the main query object
 	 * @return bool
 	 */
@@ -314,6 +324,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.4
+	 * @version 1.1.4
 	 * @return array $ids
 	 */
 	public function get_product_ids_from_excluded_cats() {
@@ -345,7 +356,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * Hide categories from category view
 	 *
 	 * @access public
-	 * @since 1.0.0 
+	 * @since 1.0.0
+	 * @version 1.0.0
 	 * @return bool
 	 */
 	public function hide_from_categories_view( $args ) {
@@ -364,6 +376,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.4
+	 * @version 1.1.4
 	 * @return array $terms
 	 */
 	public function update_category_count( $terms ) {
@@ -415,7 +428,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * Hide products from products widget
 	 *
 	 * @access public
-	 * @since 1.0.0 
+	 * @since 1.0.0
+	 * @version 1.0.0
 	 * @param array $args
 	 * @return array $args
 	 */
@@ -463,7 +477,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * Hide upsell products
 	 *
 	 * @access public
-	 * @since 1.3.2 
+	 * @since 1.3.2
 	 * @version 1.3.2
 	 * @param array $ids
 	 * @return array $ids
@@ -488,7 +502,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * Hide crosssell products
 	 *
 	 * @access public
-	 * @since 1.3.2 
+	 * @since 1.3.2
 	 * @version 1.3.2
 	 * @param array $ids
 	 * @return array $ids
@@ -510,22 +524,45 @@ class WC_Geolocation_Based_Products_Frontend {
 	}
 
 	/**
+	 * Hide shortcode products
+	 *
+	 * @access public
+	 * @since 1.5.1
+	 * @version 1.5.1
+	 * @param array $args
+	 * @return array $args
+	 */
+	public function hide_shortcode_products( $args ) {
+		if ( $this->matches ) {
+			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
+
+			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
+
+			$args['post__not_in'] = $excluded_ids;
+		}
+
+		return $args;
+	}
+
+	/**
 	 * Hide products from menu
 	 *
 	 * @access public
 	 * @since 1.1.4
+	 * @version 1.5.1
 	 * @param array $atts HTML attributes
 	 * @param array $args config of the nav item
 	 * @return array $atts
 	 */
 	public function hide_products_from_menu( $items, $args ) {
 		if ( $this->matches ) {
-			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
+			$product_ids            = array_filter( array_map( 'absint', $this->matches['products'] ) );
+			$products_excluded_cats = $this->get_product_ids_from_excluded_cats();
 
 			foreach( $items as $key => $item ) {
 				if ( in_array( (int) $item->object_id, $product_ids ) 
 					|| in_array( (int) $item->object_id, $this->matches['product_cats'] ) 
-					|| in_array( (int) $item->object_id, $this->get_product_ids_from_excluded_cats() )
+					|| in_array( (int) $item->object_id, $products_excluded_cats )
 				) {
 					unset( $items[ $key ] );
 				}
