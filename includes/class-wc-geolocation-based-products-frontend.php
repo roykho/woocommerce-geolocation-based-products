@@ -133,7 +133,7 @@ class WC_Geolocation_Based_Products_Frontend {
 				}
 
 				// check if test is enabled
-				if ( isset( $row['test'] ) && 'true' === $row['test'] ) {
+				if ( isset( $row['test'] ) && 'yes' === $row['test'] ) {
 					if ( 'show' === $row['show_hide'] ) {
 						foreach( $row['product_categories'] as $cat ) {
 							if ( ( $key = array_search( $cat, $product_cats ) ) !== false ) {
