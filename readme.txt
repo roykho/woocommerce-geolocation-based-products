@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 WordPress requires at least: 3.9.1
 Tested up to: 4.5.1
 WooCommerce requires at least: 2.5.0
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 Author URI: http://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
@@ -72,11 +72,13 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 
 == Upgrade Notice ==
 
-= 1.5.1 =
-* Tweak - Performance.
-* Add - Show/hide ability when using featured products shortcode.
+= 1.5.2 =
+* Fixed - Test mode not working.
 
 == Changelog ==
+
+= 1.5.2 | 06-28-2016 =
+* Fixed - Test mode not working.
 
 = 1.5.1 | 06-01-2016 =
 * Tweak - Performance.
