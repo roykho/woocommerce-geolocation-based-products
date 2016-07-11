@@ -172,7 +172,7 @@ class WC_Geolocation_Based_Products_Frontend {
 									unset( $products[ $key ] );
 								}
 							}
-						} else {
+						} /*else {
 							foreach( $row['product_categories'] as $cat ) {
 								$product_cats[] = $cat;
 							}
@@ -180,7 +180,7 @@ class WC_Geolocation_Based_Products_Frontend {
 							foreach( $row['products'] as $product ) {
 								$products[] = $product;
 							}
-						}
+						}*/
 					} elseif ( 'hide' === $row['show_hide'] && $this->location_matched( $row['country'], $row['region'], $row['city'] ) ) {
 						foreach( $row['product_categories'] as $cat ) {
 							$product_cats[] = $cat;
