@@ -8,6 +8,7 @@ use GeoIp2\Database\Reader;
 class WC_Geolocation_Based_Products_Geolocate {
 
 	/** URL to the geolocation database we're using */
+	//Can a hook be introduced to allow changing this URL?
 	const GEOLITE2_CITY_DB = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz';
 
 	/** @var array API endpoints for looking up user IP address */
@@ -136,6 +137,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 	 * Path to our local db.
 	 * @return string
 	 */
+	 //Can a hook be introduced to change this function?
 	private function get_local_city_database_path() {
 		$upload_dir = wp_upload_dir();
 
@@ -145,6 +147,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 	/**
 	 * Update geoip database. Adapted from https://wordpress.org/plugins/geoip-detect/.
 	 */
+	 //Can a hook be introduced to change this function?
 	public function update_database() {
 		$logger = new WC_Logger();
 
