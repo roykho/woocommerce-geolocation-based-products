@@ -59,13 +59,13 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * public access to instance object
 	 *
 	 * @since 1.1.1
-	 * @version 1.1.1
+	 * @version 1.5.3
 	 * @return bool
 	 */
-	public function get_instance() {
+	public static function get_instance() {
 		return self::$_this;
 	}
-	
+
 	/**
 	 * gets the user country
 	 *
@@ -124,9 +124,9 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		$rows = get_option( 'wc_geolocation_based_products_rules', false );
 
-		if ( $rows !== false ) {
+		if ( false !== $rows ) {
 			// loop through the rows and get data
-			foreach( $rows as $row ) {
+			foreach ( $rows as $row ) {
 				// if disabled, skip
 				if ( isset( $row['disable'] ) && 'yes' === $row['disable'] ) {
 					continue;
@@ -135,23 +135,23 @@ class WC_Geolocation_Based_Products_Frontend {
 				// check if test is enabled
 				if ( isset( $row['test'] ) && 'yes' === $row['test'] ) {
 					if ( 'show' === $row['show_hide'] ) {
-						foreach( $row['product_categories'] as $cat ) {
+						foreach ( $row['product_categories'] as $cat ) {
 							if ( ( $key = array_search( $cat, $product_cats ) ) !== false ) {
 								unset( $product_cats[ $key ] );
 							}
 						}
 
-						foreach( $row['products'] as $product ) {
+						foreach ( $row['products'] as $product ) {
 							if ( ( $key = array_search( $product, $products ) ) !== false ) {
 								unset( $products[ $key ] );
 							}
 						}
 					} elseif ( 'hide' === $row['show_hide'] ) {
-						foreach( $row['product_categories'] as $cat ) {
+						foreach ( $row['product_categories'] as $cat ) {
 							$product_cats[] = $cat;
 						}
 
-						foreach( $row['products'] as $product ) {
+						foreach ( $row['products'] as $product ) {
 							$products[] = $product;
 						}
 					}
@@ -161,39 +161,39 @@ class WC_Geolocation_Based_Products_Frontend {
 					if ( 'show' === $row['show_hide'] ) {
 						// remove product and categories from exclusion
 						if ( $this->location_matched( $row['country'], $row['region'], $row['city'] ) ) {
-							foreach( $row['product_categories'] as $cat ) {
+							foreach ( $row['product_categories'] as $cat ) {
 								if ( ( $key = array_search( $cat, $product_cats ) ) !== false ) {
 									unset( $product_cats[ $key ] );
 								}
 							}
 
-							foreach( $row['products'] as $product ) {
+							foreach ( $row['products'] as $product ) {
 								if ( ( $key = array_search( $product, $products ) ) !== false ) {
 									unset( $products[ $key ] );
 								}
 							}
 						} else {
-							foreach( $row['product_categories'] as $cat ) {
+							foreach ( $row['product_categories'] as $cat ) {
 								$product_cats[] = $cat;
 							}
 
-							foreach( $row['products'] as $product ) {
+							foreach ( $row['products'] as $product ) {
 								$products[] = $product;
 							}
 						}
 					} elseif ( 'hide' === $row['show_hide'] && $this->location_matched( $row['country'], $row['region'], $row['city'] ) ) {
-						foreach( $row['product_categories'] as $cat ) {
+						foreach ( $row['product_categories'] as $cat ) {
 							$product_cats[] = $cat;
 						}
 
-						foreach( $row['products'] as $product ) {
+						foreach ( $row['products'] as $product ) {
 							$products[] = $product;
 						}
 					}
 				}
 			}
 		}
-		
+
 		array_unique( $product_cats );
 		array_unique( $products );
 
@@ -215,7 +215,7 @@ class WC_Geolocation_Based_Products_Frontend {
 			return true;
 		}
 
-		return false;	
+		return false;
 	}
 
 	/**
@@ -233,7 +233,7 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( empty( $saved_country ) || strtolower( $saved_country ) === strtolower( $user_country ) ) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -252,7 +252,7 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( empty( $saved_region ) || strtolower( $saved_region ) === strtolower( $user_region ) ) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -270,7 +270,7 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( empty( $saved_city ) || strtolower( $saved_city ) === strtolower( $user_city ) ) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -285,7 +285,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 */
 	public function filter_query( $q ) {
 		// if it is not main query or is admin bail
-		if ( ! $q->is_main_query() || is_admin() ) { 
+		if ( ! $q->is_main_query() || is_admin() ) {
 			return;
 		}
 
@@ -296,10 +296,10 @@ class WC_Geolocation_Based_Products_Frontend {
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
 					'terms'    => $this->matches['product_cats'],
-					'operator' => 'NOT IN'
-				) 
+					'operator' => 'NOT IN',
+				),
 			);
-			
+
 			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
 			$q->set( 'tax_query', $taxquery );
@@ -334,17 +334,17 @@ class WC_Geolocation_Based_Products_Frontend {
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
 					'terms'    => $this->matches['product_cats'],
-					'operator' => 'IN'
-				)
+					'operator' => 'IN',
+				),
 			),
 			'posts_per_page' => -1,
-			'fields'         => 'ids'
+			'fields'         => 'ids',
 		);
 
 		$ids = new WP_Query( $args );
 
 		wp_reset_postdata();
-		
+
 		if ( $ids->found_posts > 0 ) {
 			return $ids->posts;
 		}
@@ -361,7 +361,7 @@ class WC_Geolocation_Based_Products_Frontend {
 	 * @return bool
 	 */
 	public function hide_from_categories_view( $args ) {
-		if ( $this->matches ) {	
+		if ( $this->matches ) {
 			$args['exclude'] = implode( ',', $this->matches['product_cats'] );
 
 			// this is expensive allow user to not use as they can choose to hide product counts
@@ -376,20 +376,16 @@ class WC_Geolocation_Based_Products_Frontend {
 	 *
 	 * @access public
 	 * @since 1.1.4
-	 * @version 1.1.4
+	 * @version 1.5.3
 	 * @return array $terms
 	 */
 	public function update_category_count( $terms ) {
 		$i = 0;
 
-		if ( $this->matches ) {
-			if ( ! is_object( $terms[0] ) ) {
-				return $terms;
-			}
-
+		if ( $this->matches && is_object( $terms ) ) {
 			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 
-			foreach( $terms as $term_obj ) {
+			foreach ( $terms as $term_obj ) {
 				$args = array(
 					'tax_query' => array(
 						'relation' => 'AND',
@@ -397,18 +393,18 @@ class WC_Geolocation_Based_Products_Frontend {
 							'taxonomy' => 'product_cat',
 							'field'    => 'id',
 							'terms'    => $term_obj->term_id,
-							'operator' => 'IN'
+							'operator' => 'IN',
 						),
 						array(
 							'taxonomy' => 'product_cat',
 							'field'    => 'id',
 							'terms'    => $this->matches['product_cats'],
-							'operator' => 'NOT IN'
+							'operator' => 'NOT IN',
 						)
 					),
 					'posts_per_page' => -1,
 					'post__not_in'   => $product_ids,
-					'fields'         => 'ids'
+					'fields'         => 'ids',
 				);
 
 				$ids = new WP_Query( $args );
@@ -458,7 +454,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
-			foreach( $args['post__in'] as $k => $id ) {
+			foreach ( $args['post__in'] as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
 					unset( $args['post__in'][ $k ] );
 				}
@@ -488,7 +484,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
-			foreach( $ids as $k => $id ) {
+			foreach ( $ids as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
 					unset( $ids[ $k ] );
 				}
@@ -513,7 +509,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 			$excluded_ids = array_unique( array_merge( $product_ids, $this->get_product_ids_from_excluded_cats() ) );
 
-			foreach( $ids as $k => $id ) {
+			foreach ( $ids as $k => $id ) {
 				if ( in_array( (int) $id, $excluded_ids ) ) {
 					unset( $ids[ $k ] );
 				}
@@ -559,9 +555,9 @@ class WC_Geolocation_Based_Products_Frontend {
 			$product_ids            = array_filter( array_map( 'absint', $this->matches['products'] ) );
 			$products_excluded_cats = $this->get_product_ids_from_excluded_cats();
 
-			foreach( $items as $key => $item ) {
-				if ( in_array( (int) $item->object_id, $product_ids ) 
-					|| in_array( (int) $item->object_id, $this->matches['product_cats'] ) 
+			foreach ( $items as $key => $item ) {
+				if ( in_array( (int) $item->object_id, $product_ids )
+					|| in_array( (int) $item->object_id, $this->matches['product_cats'] )
 					|| in_array( (int) $item->object_id, $products_excluded_cats )
 				) {
 					unset( $items[ $key ] );
@@ -585,7 +581,7 @@ class WC_Geolocation_Based_Products_Frontend {
 
 		try {
 			return $this->geolocate->geolocate_ip();
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$logger->add( 'wc_geolocation_based_products', $e->getMessage() );
 			return;
 		}

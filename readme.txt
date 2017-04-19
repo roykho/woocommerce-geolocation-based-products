@@ -3,10 +3,10 @@ Contributors: royho
 Tags: woocommerce, products, conditional products, location, geolocation, roy ho
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TPFCAQV2VEQE2
 WordPress requires at least: 3.9.1
-Tested up to: 4.5.1
+Tested up to: 4.7.3
 WooCommerce requires at least: 2.5.0
-Stable tag: 1.5.2
-Author URI: http://royho.me
+Stable tag: 1.5.3
+Author URI: https://royho.me
 Plugin URI: https://wordpress.org/plugins/woocommerce-geolocation-based-products/
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -72,13 +72,16 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 
 == Upgrade Notice ==
 
-= 1.5.2 =
-* Fixed - Test mode not working.
+= 1.5.3 =
+* Fix - Undefined index in product category widget.
 
 == Changelog ==
 
+= 1.5.3 =
+* Fix - Undefined index in product category widget.
+
 = 1.5.2 | 06-28-2016 =
-* Fixed - Test mode not working.
+* Fix - Test mode not working.
 
 = 1.5.1 | 06-01-2016 =
 * Tweak - Performance.
@@ -95,22 +98,22 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 * Update - Removed Chosen for Select2
 
 = 1.3.2 | 09-13-2015 =
-* Fixed - Related, crosssell and upsell products were not hiding
+* Fix - Related, crosssell and upsell products were not hiding
 
 = 1.3.1 | 07-11-2015 =
-* Fixed - Suppress error when geoip API returning an error at times
-* Fixed - Category widget count sometimes displays a warning when debug is on
+* Fix - Suppress error when geoip API returning an error at times
+* Fix - Category widget count sometimes displays a warning when debug is on
 
 = 1.3.0 | 06-25-2015 =
 * Removed - IP check API from ip-api.com
 * Added - IP check API from https://freegeoip.net
 
 = 1.2.0 | 04-30-2015 =
-* Fixed - Excluded product categories showing in WooCommerce product category widget
-* Fixed - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
-* Fixed - Product category count was not updated from the excluded products and product categories
-* Fixed - Tooltip was no longer popping up after WC 2.3
-* Fixed - Hide excluded products and product categories from menus
+* Fix - Excluded product categories showing in WooCommerce product category widget
+* Fix - Excluded products showing in WooCommerce products widget ( Fixed from WooCommerce 2.4 )
+* Fix - Product category count was not updated from the excluded products and product categories
+* Fix - Tooltip was no longer popping up after WC 2.3
+* Fix - Hide excluded products and product categories from menus
 * Added - POT file
 
 = 1.1.3 | 12-29-2014 =
