@@ -57,6 +57,7 @@ class WC_Geolocation_Based_Products_Admin {
 			'optionShow'                  => __( 'Show', 'woocommerce-geolocation-based-products' ),
 			'optionHide'                  => __( 'Hide', 'woocommerce-geolocation-based-products' ),
 			'categories'                  => json_encode( $cats ),
+			'wc_pre_30'                   => version_compare( WC_VERSION, '3.0', '<' ),
 		);
 
 		wp_localize_script( 'geolocation_based_products_admin_script', 'wc_geolocation_based_products_local', $localized_vars );
@@ -126,7 +127,11 @@ class WC_Geolocation_Based_Products_Admin {
 				}
 
 				if ( isset( $row['products'] ) ) {
-					$products = array_filter( array_map( 'intval', explode( ',', $row['products'] ) ) );
+					if ( version_compare( WC_VERSION, '3.0.', '<' ) ) {
+						$products = array_filter( array_map( 'intval', explode( ',', $row['products'] ) ) );
+					} else {
+						$products = array_map( 'intval', $row['products'] );
+					}
 				} else {
 					$products = array();
 				}
@@ -266,7 +271,13 @@ class WC_Geolocation_Based_Products_Admin {
 						</td>
 
 						<td class="wc-glbp-column-products">
-							<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
+							<?php if ( version_compare( WC_VERSION, '3.0', '<' ) ) { ?>
+								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" />
+							<?php } else { ?>
+								<select class="wc-product-search wc-glbp-products" multiple="multiple" name="row[0][products][]" style="width:100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products">
+								<option value=""></option>
+								</select>
+							<?php } ?>
 						</td>
 
 						<td class="wc-glbp-column-show-hide">
@@ -337,9 +348,14 @@ class WC_Geolocation_Based_Products_Admin {
 							</td>
 
 							<td class="wc-glbp-column-products">
-								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
+								<?php
 								$product_ids = array_filter( array_map( 'absint', $row['products'] ) );
-								$json_ids    = array();
+
+								if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
+								?>
+								<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[<?php echo esc_attr( $row_count ); ?>][products]" style="width: 100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products" data-selected="<?php
+
+								$json_ids = array();
 
 								foreach ( $product_ids as $product_id ) {
 									$product = wc_get_product( $product_id );
@@ -351,6 +367,22 @@ class WC_Geolocation_Based_Products_Admin {
 
 								echo esc_attr( json_encode( $json_ids ) );
 								?>" value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>" />
+								<?php } else { ?>
+									<select class="wc-product-search wc-glbp-products" multiple="multiple" name="row[<?php echo esc_attr( $row_count ); ?>][products][]" style="width:100%;" data-placeholder="<?php esc_attr_e( 'Search Products by Name', 'woocommerce-geolocation-based-products' ); ?>" data-action="woocommerce_json_search_products">
+									<?php
+									if ( ! empty( $product_ids ) ) {
+										foreach ( $product_ids as $product_id ) {
+											$product = wc_get_product( $product_id );
+
+											if ( is_object( $product ) ) {
+											?>
+												<option value="<?php echo esc_attr( $product_id ); ?>" selected="selected"><?php echo wp_kses_post( $product->get_formatted_name() ); ?></option>
+											<?php
+											}
+										}
+									} ?>
+									</select>
+								<?php } ?>
 							</td>
 
 							<td class="wc-glbp-column-show-hide">

@@ -44,10 +44,10 @@ jQuery( document ).ready( function( $ ) {
 				$( 'input.wc-glbp-city', this ).prop( 'name', replacedName );
 
 				// reinit row position products
-				rowPos = String( $( 'input.wc-glbp-products', this ).prop( 'name' ) );
+				rowPos = String( $( 'input.wc-glbp-products, select.wc-glbp-products', this ).prop( 'name' ) );
 				replacedName = rowPos.replace( /row\[\d+\]/, 'row[' + row + ']' );
 
-				$( 'input.wc-glbp-products', this ).prop( 'name', replacedName );
+				$( 'input.wc-glbp-products, select.wc-glbp-products', this ).prop( 'name', replacedName );
 
 				// reinit row position product categories
 				rowPos = String( $( 'select.wc-glbp-categories', this ).prop( 'name' ) );
@@ -128,7 +128,13 @@ jQuery( document ).ready( function( $ ) {
 				row += '</td>';
 
 				row += '<td class="wc-glbp-column-products">';
-				row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
+
+				if ( wc_geolocation_based_products_local.wc_pre_30 ) {
+					row += '<input type="hidden" class="wc-product-search wc-glbp-products" data-multiple="true" name="row[0][products]" style="width: 100%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products" />';
+				} else {
+					row += '<select class="wc-product-search wc-glbp-products" multiple="multiple" name="row[0][products][]" style="width: 100%;" data-placeholder="' + wc_geolocation_based_products_local.placeholderSearchProducts + '" data-action="woocommerce_json_search_products"><option value=""></option></select>';
+				}
+
 				row += '</td>';
 
 				row += '<td class="wc-glbp-column-show-hide">';

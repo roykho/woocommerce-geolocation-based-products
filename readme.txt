@@ -74,11 +74,13 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 
 = 1.5.3 =
 * Fix - Undefined index in product category widget.
+* Fix - WC 30 Compatibility.
 
 == Changelog ==
 
 = 1.5.3 =
 * Fix - Undefined index in product category widget.
+* Fix - WC 30 Compatibility.
 
 = 1.5.2 | 06-28-2016 =
 * Fix - Test mode not working.
