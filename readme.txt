@@ -80,6 +80,8 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 
 = 1.5.4 =
 * Fix - Filter rules not working product filter widgets.
+* New - Filter to change the db path "woocommerce_geolocation_local_city_db_path".
+* New - Filter to change the db URL "woocommerce_geolocation_database".
 
 = 1.5.3 =
 * Fix - Undefined index in product category widget.

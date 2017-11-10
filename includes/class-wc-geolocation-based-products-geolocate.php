@@ -6,9 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use GeoIp2\Database\Reader;
 
 class WC_Geolocation_Based_Products_Geolocate {
-
-	/** URL to the geolocation database we're using */
-	const GEOLITE2_CITY_DB = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz';
+	public $geolocation_db;
 
 	/** @var array API endpoints for looking up user IP address */
 	private $ip_lookup_apis = array(
@@ -23,12 +21,14 @@ class WC_Geolocation_Based_Products_Geolocate {
 	/**
 	 * Constructor.
 	 *
-	 * @access public
 	 * @since 1.4.0
-	 * @version 1.4.0
+	 * @version 1.5.4
 	 * @return bool
 	 */
 	public function __construct() {
+		/** URL to the geolocation database we're using */
+		$this->geolocation_db = apply_filters( 'woocommerce_geolocation_database', 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz' );
+
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_cron_schedule' ) );
 		add_action( 'wc_glbp_db_update', array( $this, 'update_database' ) );
 
@@ -143,7 +143,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 	private function get_local_city_database_path() {
 		$upload_dir = wp_upload_dir();
 
-		return $upload_dir['basedir'] . '/geoip_city.dat';
+		return apply_filters( 'woocommerce_geolocation_local_city_db_path', $upload_dir['basedir'] . '/geoip_city.dat' );
 	}
 
 	/**
@@ -160,7 +160,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 
 		$tmp_databases = array(
-			'city' => download_url( self::GEOLITE2_CITY_DB ),
+			'city' => download_url( $this->geolocation_db ),
 		);
 
 		foreach ( $tmp_databases as $tmp_database_path ) {
