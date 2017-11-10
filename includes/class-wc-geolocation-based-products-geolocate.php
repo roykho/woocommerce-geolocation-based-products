@@ -27,7 +27,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 	 */
 	public function __construct() {
 		/** URL to the geolocation database we're using */
-		$this->geolocation_db = apply_filters( 'woocommerce_geolocation_database', 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz' );
+		$this->geolocation_db = apply_filters( 'wc_geolocation_based_products_database', 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz' );
 
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_cron_schedule' ) );
 		add_action( 'wc_glbp_db_update', array( $this, 'update_database' ) );
@@ -88,7 +88,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 
 		if ( false === $external_ip_address ) {
 			$external_ip_address     = '0.0.0.0';
-			$ip_lookup_services      = apply_filters( 'woocommerce_geolocation_ip_lookup_apis', $this->ip_lookup_apis );
+			$ip_lookup_services      = apply_filters( 'wc_geolocation_based_products_ip_lookup_apis', $this->ip_lookup_apis );
 			$ip_lookup_services_keys = array_keys( $ip_lookup_services );
 			shuffle( $ip_lookup_services_keys );
 
@@ -97,7 +97,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 				$response         = wp_safe_remote_get( $service_endpoint, array( 'timeout' => 2 ) );
 
 				if ( ! is_wp_error( $response ) && $response['body'] ) {
-					$external_ip_address = apply_filters( 'woocommerce_geolocation_ip_lookup_api_response', wc_clean( $response['body'] ), $service_name );
+					$external_ip_address = apply_filters( 'wc_geolocation_based_products_ip_lookup_api_response', wc_clean( $response['body'] ), $service_name );
 					break;
 				}
 			}
@@ -143,7 +143,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 	private function get_local_city_database_path() {
 		$upload_dir = wp_upload_dir();
 
-		return apply_filters( 'woocommerce_geolocation_local_city_db_path', $upload_dir['basedir'] . '/geoip_city.dat' );
+		return apply_filters( 'wc_geolocation_based_products_local_city_db_path', $upload_dir['basedir'] . '/geoip_city.dat' );
 	}
 
 	/**

@@ -373,7 +373,7 @@ class WC_Geolocation_Based_Products_Frontend {
 			$args['exclude'] = implode( ',', $this->matches['product_cats'] );
 
 			// this is expensive allow user to not use as they can choose to hide product counts
-			apply_filters( 'woocommerce_geolocation_based_products_update_category_count', add_filter( 'get_terms', array( $this, 'update_category_count' ) ) );
+			apply_filters( 'wc_geolocation_based_products_update_category_count', add_filter( 'get_terms', array( $this, 'update_category_count' ) ) );
 		}
 
 		return $args;
