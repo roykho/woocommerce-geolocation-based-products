@@ -292,6 +292,7 @@ class WC_Geolocation_Based_Products_Frontend {
 		if ( $this->matches ) {
 
 			$taxquery = array(
+				'relation' => 'AND',
 				array(
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
@@ -299,6 +300,13 @@ class WC_Geolocation_Based_Products_Frontend {
 					'operator' => 'NOT IN',
 				),
 			);
+
+			// Append with existing taxquery.
+			$existing_taxquery = $q->get( 'tax_query' );
+
+			if ( ! empty( $existing_taxquery ) ) {
+				array_push( $taxquery, $existing_taxquery );
+			}
 
 			$product_ids = array_filter( array_map( 'absint', $this->matches['products'] ) );
 

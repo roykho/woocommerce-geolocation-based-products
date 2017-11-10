@@ -3,7 +3,7 @@ Contributors: royho
 Tags: woocommerce, products, conditional products, location, geolocation, roy ho
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TPFCAQV2VEQE2
 WordPress requires at least: 3.9.1
-Tested up to: 4.7.3
+Tested up to: 4.9
 WooCommerce requires at least: 2.5.0
 Stable tag: 1.5.3
 Author URI: https://royho.me
@@ -77,6 +77,9 @@ You can post a GitHub issue here https://github.com/roykho/woocommerce-geolocati
 * Fix - WC 30 Compatibility.
 
 == Changelog ==
+
+= 1.5.4 =
+* Fix - Filter rules not working product filter widgets.
 
 = 1.5.3 =
 * Fix - Undefined index in product category widget.

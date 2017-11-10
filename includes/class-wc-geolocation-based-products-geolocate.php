@@ -17,7 +17,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 		'ipecho'            => 'http://ipecho.net/plain',
 		'ident'             => 'http://ident.me',
 		'whatismyipaddress' => 'http://bot.whatismyipaddress.com',
-		'ip.appspot'        => 'http://ip.appspot.com'
+		'ip.appspot'        => 'http://ip.appspot.com',
 	);
 
 	/**
@@ -117,19 +117,23 @@ class WC_Geolocation_Based_Products_Geolocate {
 	public function geolocate_ip( $ip_address = '', $fallback = true ) {
 		$ip_address  = $ip_address ? $ip_address : self::get_ip_address();
 		$city_reader = new Reader( self::get_local_city_database_path() );
-		
+
 		if ( ( '::1' === $ip_address || '127:0:0:1' === $ip_address ) && $fallback ) {
 			// May be a local environment - find external IP
 			return $this->geolocate_ip( $this->get_external_ip_address(), false );
 		}
 
 		$city_record = $city_reader->city( $ip_address );
-		
+
 		$country     = sanitize_text_field( strtoupper( $city_record->country->isoCode ) );
 		$city        = sanitize_text_field( strtoupper( $city_record->city->name ) );
-		$region      = sanitize_text_field( strtoupper( $city_record->mostSpecificSubdivision->isoCode) );
+		$region      = sanitize_text_field( strtoupper( $city_record->mostSpecificSubdivision->isoCode ) );
 
-		return array( 'country_code' => $country, 'city' => $city, 'region_code' => $region );
+		return array(
+			'country_code' => $country,
+			'city'         => $city,
+			'region_code'  => $region,
+		);
 	}
 
 	/**
@@ -156,7 +160,7 @@ class WC_Geolocation_Based_Products_Geolocate {
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 
 		$tmp_databases = array(
-			'city' => download_url( self::GEOLITE2_CITY_DB )
+			'city' => download_url( self::GEOLITE2_CITY_DB ),
 		);
 
 		foreach ( $tmp_databases as $tmp_database_path ) {
