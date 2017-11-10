@@ -277,9 +277,8 @@ class WC_Geolocation_Based_Products_Frontend {
 	/**
 	 * Filters the query for output
 	 *
-	 * @access public
 	 * @since 1.0.0
-	 * @version 1.0.0
+	 * @version 1.5.4
 	 * @param object $q | the main query object
 	 * @return bool
 	 */

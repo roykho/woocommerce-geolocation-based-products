@@ -49,8 +49,8 @@ if ( ! class_exists( 'WC_Geolocation_Based_Products' ) ) :
 		/**
 		 * init
 		 *
-		 * @access public
 		 * @since 1.0.0
+		 * @version 1.5.4
 		 * @return bool
 		 */
 		public function __construct() {
@@ -63,13 +63,13 @@ if ( ! class_exists( 'WC_Geolocation_Based_Products' ) ) :
 
 			if ( is_woocommerce_active() ) {
 				if ( is_admin() ) {
-					include_once( 'includes/class-wc-geolocation-based-products-admin.php' );
+					require_once( dirname( __FILE__ ) . '/includes/class-wc-geolocation-based-products-admin.php' );
 
 					add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'action_links' ) );
 				} else {
-					include_once( 'vendor/autoload.php' );
-					include_once( 'includes/class-wc-geolocation-based-products-geolocate.php' );
-					include_once( 'includes/class-wc-geolocation-based-products-frontend.php' );
+					require_once( dirname( __FILE__ ) . '/vendor/autoload.php' );
+					require_once( dirname( __FILE__ ) . '/includes/class-wc-geolocation-based-products-geolocate.php' );
+					require_once( dirname( __FILE__ ) . '/includes/class-wc-geolocation-based-products-frontend.php' );
 				}
 			} else {
 				add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
