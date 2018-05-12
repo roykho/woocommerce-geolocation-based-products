@@ -31,7 +31,7 @@ class WC_Geolocation_Based_Products_Admin {
 	 * @since 1.1.1
 	 * @return bool
 	 */
-	public function get_instance() {
+	public static function get_instance() {
 		return self::$_this;
 	}
 
